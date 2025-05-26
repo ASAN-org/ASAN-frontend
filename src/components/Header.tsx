@@ -1,6 +1,7 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import WebshopData from "../../public/data/webshop.json";
 import SearchBox from "./SearchBox";
+import Cart from "./Cart";
 
 export default function Header() {
   return (
@@ -12,9 +13,21 @@ export default function Header() {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        <Box component={"img"} src={WebshopData.logo} margin={"1rem"}></Box>
-        <Box height={"3rem"} margin={"1rem"}>
-          <SearchBox />
+        <Box display={"flex"} flexDirection={"row"}>
+          <Box component={"img"} src={WebshopData.logo} margin={"1rem"}></Box>
+          <Box height={"3rem"} margin={"1rem"}>
+            <SearchBox />
+          </Box>
+        </Box>
+
+        <Box
+          margin={"1rem"}
+          display={"flex"}
+          flexDirection={"row"}
+          gap={"1rem"}
+        >
+          <Cart />
+          <Button variant="contained">Login</Button>
         </Box>
       </Box>
     </>
