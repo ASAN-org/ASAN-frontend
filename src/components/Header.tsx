@@ -2,6 +2,7 @@ import { Box, Button } from "@mui/material";
 import WebshopData from "../../public/data/webshop.json";
 import SearchBox from "./SearchBox";
 import Cart from "./Cart";
+import CategoryTabs from "./CategoryTabs";
 
 export default function Header() {
   return (
@@ -10,24 +11,35 @@ export default function Header() {
         display={"flex"}
         width={"100%"}
         sx={{ backgroundColor: "#f0f0f0" }}
-        alignItems={"center"}
-        justifyContent={"space-between"}
+        flexDirection={"column"}
       >
-        <Box display={"flex"} flexDirection={"row"}>
-          <Box component={"img"} src={WebshopData.logo} margin={"1rem"}></Box>
-          <Box height={"3rem"} margin={"1rem"}>
-            <SearchBox />
-          </Box>
-        </Box>
-
         <Box
-          margin={"1rem"}
           display={"flex"}
           flexDirection={"row"}
-          gap={"1rem"}
+          justifyContent={"space-between"}
         >
-          <Cart />
-          <Button variant="contained">Login</Button>
+          <Box display={"flex"} flexDirection={"row"}>
+            <Box component={"img"} src={WebshopData.logo} margin={"1rem"}></Box>
+            <Box height={"3rem"} margin={"1rem"}>
+              <SearchBox />
+            </Box>
+          </Box>
+
+          <Box
+            margin={"1rem"}
+            display={"flex"}
+            flexDirection={"row"}
+            gap={"1rem"}
+            alignItems={"center"}
+          >
+            <Cart />
+            <Button variant="contained" sx={{ height: "2rem" }}>
+              Login
+            </Button>
+          </Box>
+        </Box>
+        <Box>
+          <CategoryTabs />
         </Box>
       </Box>
     </>
