@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import WebshopData from "../../public/data/webshop.json";
 import SearchBox from "./SearchBox";
 import Cart from "./Cart";
-import CategoryTabs from "./CategoryTabs";
+import MegaMenu from "./MegaMenu";
 
 export default function Header() {
   return (
@@ -39,7 +39,7 @@ export default function Header() {
           </Box>
         </Box>
         <Box>
-          <CategoryTabs />
+          <MegaMenu />
         </Box>
       </Box>
     </>
