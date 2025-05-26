@@ -1,3 +1,10 @@
 {
-  "title": "\"My Site\""
+  "title": "\"My Site\"",
+  "logo" : "https://assets.khanoumi.com/4.91.0.0/_toad/images/brand/logo.svg?v=1.1",
+  "categories": [{"name": "mobile", "children" : ["Iphone", "Samsung", "Xiaomi"]},
+                 {"name": "laptop", "children" : ["Macbook", "Dell", "HP"]},
+                 {"name": "tablet", "children" : ["iPad", "Samsung Tab", "Lenovo Tab"]},
+                 {"name": "accessories", "children" : ["Headphones", "Chargers", "Cases"]},
+                 {"name": "wearables", "children" : ["Smartwatches", "Fitness Bands"]},
+                 {"name": "gaming", "children" : ["Consoles", "Games", "Accessories"]}]
 }

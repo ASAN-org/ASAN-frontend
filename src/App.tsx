@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes } from "react-router-dom";
 import appRoutes from "./routes";
-import "./App.css";
 
 function App() {
   //const [siteTitle, setSiteTitle] = useState("Loading...");
