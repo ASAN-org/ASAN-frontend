@@ -1,12 +1,21 @@
 import { Box, Button, useTheme, useMediaQuery } from "@mui/material";
-import WebshopData from "../../public/data/webshop.json";
 import SearchBox from "./SearchBox";
 import Cart from "./Cart";
 import MegaMenu from "./MegaMenu";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [logo, setLogo] = useState("");
+
+  useEffect(() => {
+    fetch("https://asanorg.liara.run/webshop")
+      .then((res) => res.json())
+      .then((data) => {
+        setLogo(data.logo.replace(/^"(.*)"$/, "$1"));
+      });
+  }, []);
 
   return (
     <>
@@ -30,7 +39,7 @@ export default function Header() {
           >
             <Box
               component={"img"}
-              src={WebshopData.logo}
+              src={logo}
               margin={"1rem"}
               sx={{
                 maxHeight: "40px",
