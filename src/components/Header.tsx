@@ -1,4 +1,10 @@
-import { Box, Button, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  useTheme,
+  useMediaQuery,
+  Typography,
+} from "@mui/material";
 import SearchBox from "./SearchBox";
 import Cart from "./Cart";
 import MegaMenu from "./MegaMenu";
@@ -8,12 +14,14 @@ export default function Header() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [logo, setLogo] = useState("");
+  const [siteTitle, setSiteTitle] = useState("");
 
   useEffect(() => {
     fetch("https://asanorg.liara.run/webshop")
       .then((res) => res.json())
       .then((data) => {
         setLogo(data.logo.replace(/^"(.*)"$/, "$1"));
+        setSiteTitle(data.title.replace(/^"(.*)"$/, "$1"));
       });
   }, []);
 
@@ -40,13 +48,16 @@ export default function Header() {
             <Box
               component={"img"}
               src={logo}
-              margin={"1rem"}
+              margin={"0.5rem"}
               sx={{
                 maxHeight: "40px",
                 objectFit: "contain",
-                alignSelf: isMobile ? "center" : "flex-start",
+                //alignSelf: isMobile ? "center" : "flex-start",
               }}
             />
+            <Typography fontWeight={"bold"} fontSize={"1.7rem"}>
+              {siteTitle}
+            </Typography>
             <Box margin={"1rem"} width={isMobile ? "auto" : "300px"}>
               <SearchBox />
             </Box>
