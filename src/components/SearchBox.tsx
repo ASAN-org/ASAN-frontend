@@ -11,7 +11,8 @@ export default function SearchBox() {
         p: "2px 4px",
         display: "flex",
         alignItems: "center",
-        width: 400,
+        width: { xs: "100%", sm: 400 },
+        minWidth: 300,
       }}
     >
       <InputBase
