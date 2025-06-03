@@ -1,5 +1,5 @@
 import { Box, IconButton, useTheme, useMediaQuery } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -68,7 +68,7 @@ export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageS
       >
         {images.map((image, index) => (
           <Box
-            key={image.url}
+            key={index}
             sx={{
               minWidth: '100%',
               height: '100%',
