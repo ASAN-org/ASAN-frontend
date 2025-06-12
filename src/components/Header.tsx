@@ -10,23 +10,26 @@ import Cart from "./Cart";
 import MegaMenu from "./MegaMenu";
 import { useEffect, useState } from "react";
 import type { Categories } from "./MegaMenu";
+//import { useWebshopData } from "../hooks/UseWebshopData";
+import webShopData from "../../public/data/webshop.json";
 
 export default function Header() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [logo, setLogo] = useState("");
   const [siteTitle, setSiteTitle] = useState("");
-  const [categories, setCategories] = useState<Categories>({});
+  const [categories, setCategories] = useState<Categories>([]);
+
+  //const { data } = useWebshopData();
+  const data = webShopData;
 
   useEffect(() => {
-    fetch("https://asanorg.liara.run/webshop")
-      .then((res) => res.json())
-      .then((data) => {
-        setLogo(data.logo.replace(/^"(.*)"$/, "$1"));
-        setSiteTitle(data.title.replace(/^"(.*)"$/, "$1"));
-        setCategories(data.categories);
-      });
-  }, []);
+    if (data) {
+      setLogo(data.logo?.replace(/^"(.*)"$/, "$1"));
+      setSiteTitle(data.title?.replace(/^"(.*)"$/, "$1"));
+      setCategories(data.categories);
+    }
+  }, [data]);
 
   return (
     <>
