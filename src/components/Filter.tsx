@@ -1,17 +1,23 @@
 import { Typography } from "@mui/material";
 
 type FilterProps = {
-  type: "range" | "checklist" | "toggle";
-  label: string;
-  options?: string[];
-  min?: number;
-  max?: number;
+  filters: {
+    category: string;
+    subCategory?: string;
+    type: string;
+    label: string;
+    options?: string[];
+    min?: number;
+    max?: number;
+  }[];
 };
 
-const Filter = (filters: FilterProps[]) => {
+const Filter: React.FC<FilterProps> = ({ filters }) => {
   return (
     <>
-      <Typography>{filters.map((filter) => filter.label)}</Typography>
+      {filters.map((filter) => (
+        <Typography key={filter.label}>{filter.label}</Typography>
+      ))}
     </>
   );
 };

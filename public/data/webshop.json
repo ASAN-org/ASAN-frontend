@@ -7,5 +7,5 @@
                  {"name": "accessories", "children" : ["Headphones", "Chargers", "Cases"]},
                  {"name": "wearables", "children" : ["Smartwatches", "Fitness Bands"]},
                  {"name": "gaming", "children" : ["Consoles", "Games", "Accessories"]}],
-  "filters": [{"category" : "Mobile", "sub-category" : "IPhone", "type" : "checklist", "label" : "Color", "options" : ["Black", "White", "Gold", "Green"]}]
+  "filters": [{"category" : "Mobile", "subCategory" : "IPhone", "type" : "checklist", "label" : "Color", "options" : ["Black", "White", "Gold", "Green"]}]
 }
