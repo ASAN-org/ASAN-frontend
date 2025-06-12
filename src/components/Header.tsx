@@ -9,12 +9,14 @@ import SearchBox from "./SearchBox";
 import Cart from "./Cart";
 import MegaMenu from "./MegaMenu";
 import { useEffect, useState } from "react";
+import type { Categories } from "./MegaMenu";
 
 export default function Header() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [logo, setLogo] = useState("");
   const [siteTitle, setSiteTitle] = useState("");
+  const [categories, setCategories] = useState<Categories>({});
 
   useEffect(() => {
     fetch("https://asanorg.liara.run/webshop")
@@ -22,6 +24,7 @@ export default function Header() {
       .then((data) => {
         setLogo(data.logo.replace(/^"(.*)"$/, "$1"));
         setSiteTitle(data.title.replace(/^"(.*)"$/, "$1"));
+        setCategories(data.categories);
       });
   }, []);
 
@@ -78,7 +81,7 @@ export default function Header() {
           </Box>
         </Box>
         <Box>
-          <MegaMenu />
+          <MegaMenu categories={categories} />
         </Box>
       </Box>
     </>

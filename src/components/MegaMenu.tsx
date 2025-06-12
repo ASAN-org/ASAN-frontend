@@ -14,17 +14,19 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
-import webShopData from "../../public/data/webshop.json";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-interface CategoryProps {
-  name: string;
-  children: string[];
-}
+export type Categories = {
+  [key: string]: string[];
+};
 
-export default function MegaMenu() {
+type MegaMenuProps = {
+  categories: Categories;
+};
+
+const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -67,26 +69,22 @@ export default function MegaMenu() {
       }}
     >
       <List>
-        {webShopData.categories.map((category: CategoryProps) => (
-          <Box key={category.name}>
+        {Object.entries(categories).map(([category, items]) => (
+          <Box key={category}>
             <ListItem
-              onClick={() => handleCategoryClick(category.name)}
+              onClick={() => handleCategoryClick(category)}
               sx={{ cursor: "pointer" }}
             >
-              <ListItemText primary={category.name} />
-              {expandedCategory === category.name ? (
-                <ExpandLess />
-              ) : (
-                <ExpandMore />
-              )}
+              <ListItemText primary={category} />
+              {expandedCategory === category ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse
-              in={expandedCategory === category.name}
+              in={expandedCategory === category}
               timeout="auto"
               unmountOnExit
             >
               <List component="div" disablePadding>
-                {category.children.map((subCategory: string) => (
+                {items.map((subCategory) => (
                   <ListItem key={subCategory} sx={{ pl: 4, cursor: "pointer" }}>
                     <ListItemText primary={subCategory} />
                   </ListItem>
@@ -101,10 +99,10 @@ export default function MegaMenu() {
 
   const DesktopMenu = (
     <Box display="flex" justifyContent="center" onMouseLeave={handleMouseLeave}>
-      {webShopData.categories.map((category: CategoryProps) => (
-        <Box key={category.name}>
+      {Object.entries(categories).map(([category, items]) => (
+        <Box key={category}>
           <Button
-            onMouseEnter={(e) => handleMouseEnter(e, category.name)}
+            onMouseEnter={(e) => handleMouseEnter(e, category)}
             sx={{
               color: "white",
               textTransform: "none",
@@ -114,10 +112,10 @@ export default function MegaMenu() {
               },
             }}
           >
-            {category.name}
+            {category}
           </Button>
           <Popper
-            open={openCategory === category.name}
+            open={openCategory === category}
             anchorEl={anchorEl}
             placement="bottom-start"
             sx={{ zIndex: 1300 }}
@@ -130,11 +128,11 @@ export default function MegaMenu() {
                 backgroundColor: "white",
                 boxShadow: 3,
               }}
-              onMouseEnter={() => setOpenCategory(category.name)}
+              onMouseEnter={() => setOpenCategory(category)}
               onMouseLeave={handleMouseLeave}
             >
               <Box display="flex" flexDirection="column" gap={1}>
-                {category.children.map((subCategory: string) => (
+                {items.map((subCategory) => (
                   <Typography
                     key={subCategory}
                     sx={{
@@ -181,4 +179,6 @@ export default function MegaMenu() {
       )}
     </Box>
   );
-}
+};
+
+export default MegaMenu;
