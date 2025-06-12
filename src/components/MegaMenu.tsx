@@ -17,6 +17,7 @@ import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { useNavigate } from "react-router-dom";
 
 export type Categories = {
   [key: string]: string[];
@@ -34,6 +35,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
 
   const handleMouseEnter = (
     event: React.MouseEvent<HTMLElement>,
@@ -56,6 +58,14 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
     setExpandedCategory(expandedCategory === category ? null : category);
   };
 
+  const handleNavigate = (category: string, subCategory?: string) => {
+    if (subCategory) {
+      navigate(`/${category}/${subCategory}`);
+    } else {
+      navigate(`/${category}`);
+    }
+  };
+
   const MobileMenu = (
     <Drawer
       anchor="left"
@@ -75,7 +85,10 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
               onClick={() => handleCategoryClick(category)}
               sx={{ cursor: "pointer" }}
             >
-              <ListItemText primary={category} />
+              <ListItemText
+                primary={category}
+                onClick={() => handleNavigate(category)}
+              />
               {expandedCategory === category ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse
@@ -85,7 +98,11 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
             >
               <List component="div" disablePadding>
                 {items.map((subCategory) => (
-                  <ListItem key={subCategory} sx={{ pl: 4, cursor: "pointer" }}>
+                  <ListItem
+                    key={subCategory}
+                    sx={{ pl: 4, cursor: "pointer" }}
+                    onClick={() => handleNavigate(category, subCategory)}
+                  >
                     <ListItemText primary={subCategory} />
                   </ListItem>
                 ))}
@@ -103,6 +120,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
         <Box key={category}>
           <Button
             onMouseEnter={(e) => handleMouseEnter(e, category)}
+            onClick={() => handleNavigate(category)}
             sx={{
               color: "white",
               textTransform: "none",
@@ -134,6 +152,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
               <Box display="flex" flexDirection="column" gap={1}>
                 {items.map((subCategory) => (
                   <Typography
+                    onClick={() => handleNavigate(category, subCategory)}
                     key={subCategory}
                     sx={{
                       p: 1,
