@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
@@ -26,9 +27,10 @@ export type Categories = Array<{
 
 type MegaMenuProps = {
   categories: Categories;
+  siteTitle?: string;
 };
 
-const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
+const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -56,7 +58,9 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
   };
 
   const handleCategoryClick = (categoryName: string) => {
-    setExpandedCategory(expandedCategory === categoryName ? null : categoryName);
+    setExpandedCategory(
+      expandedCategory === categoryName ? null : categoryName
+    );
   };
 
   const handleNavigate = (categoryName: string, subCategory?: string) => {
@@ -79,6 +83,19 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
         },
       }}
     >
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        p={2}
+        borderBottom={1}
+        borderColor="divider"
+      >
+        <Typography variant="h6">{siteTitle || "Menu"}</Typography>
+        <IconButton onClick={handleMobileMenuToggle} aria-label="close menu">
+          <CloseIcon />
+        </IconButton>
+      </Box>
       <List>
         {categories.map((category) => (
           <Box key={category.name}>
@@ -90,7 +107,11 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
                 primary={category.name}
                 onClick={() => handleNavigate(category.name)}
               />
-              {expandedCategory === category.name ? <ExpandLess /> : <ExpandMore />}
+              {expandedCategory === category.name ? (
+                <ExpandLess />
+              ) : (
+                <ExpandMore />
+              )}
             </ListItem>
             <Collapse
               in={expandedCategory === category.name}
@@ -178,12 +199,12 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories }) => {
     <Box
       sx={{
         width: "100%",
-        backgroundColor: "black",
-        color: "white",
+        backgroundColor: isMobile ? "transparent" : "black",
+        color: isMobile ? "black" : "white",
       }}
     >
       {isMobile ? (
-        <Box px={2} py={1}>
+        <Box px={1} py={1}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
