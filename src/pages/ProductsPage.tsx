@@ -19,7 +19,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
       <h1>{category}</h1>
       {subCategory && <h2>{subCategory}</h2>}
 
-      <Filter category={category} label="H" type="T" />
+      <Filter category={category} subCategory={subCategory} label="H" type="T" />
     </div>
   );
 };

@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import type { Categories } from "./MegaMenu";
 //import { useWebshopData } from "../hooks/UseWebshopData";
 import webShopData from "../../public/data/webshop.json";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const theme = useTheme();
@@ -22,6 +23,7 @@ export default function Header() {
 
   //const { data } = useWebshopData();
   const data = webShopData;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data) {
@@ -54,10 +56,12 @@ export default function Header() {
             <Box
               component={"img"}
               src={logo}
+              onClick={() => navigate("/")}
               margin={"0.5rem"}
               sx={{
                 maxHeight: "40px",
                 objectFit: "contain",
+                cursor: "pointer"
                 //alignSelf: isMobile ? "center" : "flex-start",
               }}
             />
