@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import Filter from "./../components/Filter";
 //import webShopData from "./../../public/data/webshop.json";
 //import { useWebshopData } from "../hooks/UseWebshopData";
@@ -15,12 +16,14 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
   //const data = webShopData;
 
   return (
-    <div>
-      <h1>{category}</h1>
-      {subCategory && <h2>{subCategory}</h2>}
-
-      <Filter category={category} subCategory={subCategory} label="H" type="T" />
-    </div>
+    <Box>
+      <Filter
+        category={category}
+        subCategory={subCategory}
+        label="H"
+        type="T"
+      />
+    </Box>
   );
 };
 
