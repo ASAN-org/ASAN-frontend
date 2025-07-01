@@ -17,10 +17,11 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
-import webShopData from "../../public/data/webshop.json";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import { createSubcategoryUrl } from "../utils/urlUtils";
+import { useCategoryData } from "../hooks/useCategoryData";
 
 type FilterProps = {
   category: string; // Changed from _category to match usage
@@ -33,9 +34,12 @@ type FilterProps = {
 };
 
 const Filter: React.FC<FilterProps> = ({ category, subCategory, options }) => {
-  const filteredCategory = webShopData.categories.find(
-    (cat) => cat.name === category
-  );
+  const { findCategoryByName, loading } = useCategoryData();
+  const filteredCategory = findCategoryByName(category);
+
+  // Get the original category name for navigation
+  const originalCategoryName = filteredCategory?.name || category;
+
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -69,6 +73,10 @@ const Filter: React.FC<FilterProps> = ({ category, subCategory, options }) => {
 
   // Toggle filter state
   const [toggle, setToggle] = useState(false);
+
+  if (loading) {
+    return <div>Loading filters...</div>;
+  }
 
   const handleCheck = (option: string) => {
     setChecked((prev) =>
@@ -144,7 +152,12 @@ const Filter: React.FC<FilterProps> = ({ category, subCategory, options }) => {
                               key={subCat}
                               onClick={() => {
                                 setOpen(false);
-                                navigate(`/${category}/${subCat}`);
+                                navigate(
+                                  createSubcategoryUrl(
+                                    originalCategoryName,
+                                    subCat
+                                  )
+                                );
                               }}
                               sx={{ justifyContent: "flex-start" }}
                             >
@@ -316,7 +329,11 @@ const Filter: React.FC<FilterProps> = ({ category, subCategory, options }) => {
                   {filteredCategory.children.map((subCat) => (
                     <Button
                       key={subCat}
-                      onClick={() => navigate(`/${category}/${subCat}`)}
+                      onClick={() =>
+                        navigate(
+                          createSubcategoryUrl(originalCategoryName, subCat)
+                        )
+                      }
                       sx={{ justifyContent: "flex-start" }}
                     >
                       {subCat}

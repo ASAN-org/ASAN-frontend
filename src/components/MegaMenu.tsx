@@ -19,6 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { useNavigate } from "react-router-dom";
+import { createCategoryUrl, createSubcategoryUrl } from "../utils/urlUtils";
 
 export type Categories = Array<{
   name: string;
@@ -65,9 +66,9 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
 
   const handleNavigate = (categoryName: string, subCategory?: string) => {
     if (subCategory) {
-      navigate(`/${categoryName}/${subCategory}`);
+      navigate(createSubcategoryUrl(categoryName, subCategory));
     } else {
-      navigate(`/${categoryName}`);
+      navigate(createCategoryUrl(categoryName));
     }
   };
 

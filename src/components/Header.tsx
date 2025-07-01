@@ -10,9 +10,8 @@ import Cart from "./Cart";
 import MegaMenu from "./MegaMenu";
 import { useEffect, useState } from "react";
 import type { Categories } from "./MegaMenu";
-//import { useWebshopData } from "../hooks/UseWebshopData";
-import webShopData from "../../public/data/webshop.json";
 import { useNavigate } from "react-router-dom";
+import { useWebshopData } from "../hooks/UseWebshopData";
 
 export default function Header() {
   const theme = useTheme();
@@ -21,8 +20,7 @@ export default function Header() {
   const [siteTitle, setSiteTitle] = useState("");
   const [categories, setCategories] = useState<Categories>([]);
 
-  //const { data } = useWebshopData();
-  const data = webShopData;
+  const { data } = useWebshopData();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,7 +97,7 @@ export default function Header() {
               justifyContent="flex-start"
               width="100%"
               position="relative"
-              py={1}
+              p={2}
             >
               {/* Left: Logo and Title */}
               <Box
