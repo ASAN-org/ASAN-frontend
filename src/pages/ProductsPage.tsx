@@ -12,12 +12,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
 }) => {
   return (
     <Box>
-      <Filter
-        category={category}
-        subCategory={subCategory}
-        label="H"
-        type="T"
-      />
+      <Filter category={category} subCategory={subCategory} />
     </Box>
   );
 };

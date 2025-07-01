@@ -5,11 +5,7 @@ import {
   Box,
   Button,
   Typography,
-  Slider,
   Divider,
-  Checkbox,
-  FormControlLabel,
-  Switch,
   IconButton,
   Paper,
   useMediaQuery,
@@ -17,73 +13,87 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { createSubcategoryUrl } from "../utils/urlUtils";
 import { useCategoryData } from "../hooks/useCategoryData";
+import DynamicFilter from "./DynamicFilter";
 
 type FilterProps = {
-  category: string; // Changed from _category to match usage
+  category: string;
   subCategory?: string;
-  type: string;
-  label: string;
-  options?: string[];
-  min?: number;
-  max?: number;
 };
 
-const Filter: React.FC<FilterProps> = ({ category, subCategory, options }) => {
-  const { findCategoryByName, loading } = useCategoryData();
+const Filter: React.FC<FilterProps> = ({ category, subCategory }) => {
+  const { findCategoryByName, getFiltersForCategory, loading } =
+    useCategoryData();
   const filteredCategory = findCategoryByName(category);
 
   // Get the original category name for navigation
   const originalCategoryName = filteredCategory?.name || category;
+
+  // Get filters for this category/subcategory
+  // Only show filters if we're on a subcategory page (subCategory exists)
+  const categoryFilters = subCategory
+    ? getFiltersForCategory(category, subCategory)
+    : [];
 
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = useState(false); // for mobile filter dialog
 
-  // Range slider state (example min/max)
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    100000, 10000000,
-  ]);
-  const min = 100000;
-  const max = 10000000;
-  const unit = "Toman";
+  // Filter states
+  const [filterStates, setFilterStates] = useState<{
+    [key: string]: number[] | string[] | boolean;
+  }>({});
 
-  // Checklist state
-  const checklistOptions = options || [
-    "Option 1",
-    "Option 2",
-    "Option 3",
-    "Option 4",
-    "Option 5",
-    "Option 6",
-    "Option 7",
-    "Option 8",
-    "Option 9",
-    "Option 10",
-    "Option 11",
-    "Option 12",
-  ];
-  const [checked, setChecked] = useState<string[]>([]);
-  const [showAll, setShowAll] = useState(false);
+  // Track current category to avoid re-initializing
+  const currentCategoryRef = useRef<string>("");
 
-  // Toggle filter state
-  const [toggle, setToggle] = useState(false);
+  // Initialize filter states
+  useEffect(() => {
+    const categoryKey = `${category}-${subCategory || ""}`;
+
+    // Only initialize if we're on a different category
+    if (currentCategoryRef.current === categoryKey) return;
+
+    currentCategoryRef.current = categoryKey;
+
+    const initialStates: { [key: string]: number[] | string[] | boolean } = {};
+    categoryFilters.forEach((filter) => {
+      if (filter.type === "range") {
+        initialStates[filter.label] = [filter.min || 0, filter.max || 1000000];
+      } else if (filter.type === "checklist") {
+        initialStates[filter.label] = [];
+      } else if (filter.type === "toggle") {
+        initialStates[filter.label] = false;
+      }
+    });
+    setFilterStates(initialStates);
+  }, [categoryFilters, category, subCategory]);
+
+  // Update filter state
+  const updateFilterState = (
+    filterLabel: string,
+    value: number[] | string[] | boolean
+  ) => {
+    setFilterStates((prev) => ({
+      ...prev,
+      [filterLabel]: value,
+    }));
+  };
 
   if (loading) {
     return <div>Loading filters...</div>;
   }
 
-  const handleCheck = (option: string) => {
-    setChecked((prev) =>
-      prev.includes(option)
-        ? prev.filter((item) => item !== option)
-        : [...prev, option]
-    );
+  const handleFilterChange = (
+    filterLabel: string,
+    value: number[] | string[] | boolean
+  ) => {
+    updateFilterState(filterLabel, value);
   };
 
   if (isMobile) {
@@ -174,94 +184,14 @@ const Filter: React.FC<FilterProps> = ({ category, subCategory, options }) => {
                 </Box>
               )}
 
-              {/* Range Slider */}
-              <Box>
-                <Typography gutterBottom fontWeight="bold">
-                  Price Range
-                </Typography>
-                <Slider
-                  value={priceRange}
-                  onChange={(_, newValue) =>
-                    setPriceRange(newValue as [number, number])
-                  }
-                  valueLabelDisplay="auto"
-                  min={min}
-                  max={max}
-                  step={10000}
+              {/* Dynamic Filters - Only show if we have filters */}
+              {categoryFilters.length > 0 && (
+                <DynamicFilter
+                  filters={categoryFilters}
+                  onFilterChange={handleFilterChange}
+                  filterStates={filterStates}
                 />
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Typography variant="body2">
-                    {priceRange[0].toLocaleString()} {unit}
-                  </Typography>
-                  <Typography variant="body2">
-                    {priceRange[1].toLocaleString()} {unit}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Checklist Filter */}
-              <Divider sx={{ color: "#f0f0f0", margin: "0.5rem" }} />
-              <Box mt={2}>
-                <Typography gutterBottom fontWeight="bold">
-                  Options
-                </Typography>
-                <Box display="flex" flexDirection="column">
-                  {(showAll
-                    ? checklistOptions
-                    : checklistOptions.slice(0, 5)
-                  ).map((option) => (
-                    <FormControlLabel
-                      key={option}
-                      control={
-                        <Checkbox
-                          checked={checked.includes(option)}
-                          onChange={() => handleCheck(option)}
-                        />
-                      }
-                      label={option}
-                    />
-                  ))}
-                </Box>
-                {checklistOptions.length > 8 && (
-                  <Button
-                    size="small"
-                    onClick={() => setShowAll((prev) => !prev)}
-                    sx={{ mt: 1, alignSelf: "flex-start" }}
-                  >
-                    {showAll ? "Show Less" : "Show More"}
-                  </Button>
-                )}
-              </Box>
-
-              {/* Toggle Filter */}
-              <Box mt={2}>
-                <Typography gutterBottom fontWeight="bold">
-                  supports usb?
-                </Typography>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Typography
-                    variant="body2"
-                    color={!toggle ? "primary" : "text.secondary"}
-                  >
-                    no
-                  </Typography>
-                  <Switch
-                    checked={toggle}
-                    onChange={() => setToggle((v) => !v)}
-                    color="primary"
-                  />
-                  <Typography
-                    variant="body2"
-                    color={toggle ? "primary" : "text.secondary"}
-                  >
-                    yes
-                  </Typography>
-                </Box>
-              </Box>
+              )}
 
               {/* Action Buttons */}
               <Box
@@ -349,89 +279,14 @@ const Filter: React.FC<FilterProps> = ({ category, subCategory, options }) => {
         </Box>
       )}
 
-      {/* Range Slider */}
-      <Box>
-        <Typography gutterBottom fontWeight="bold">
-          Price Range
-        </Typography>
-        <Slider
-          value={priceRange}
-          onChange={(_, newValue) =>
-            setPriceRange(newValue as [number, number])
-          }
-          valueLabelDisplay="auto"
-          min={min}
-          max={max}
-          step={10000}
+      {/* Dynamic Filters - Only show if we have filters */}
+      {categoryFilters.length > 0 && (
+        <DynamicFilter
+          filters={categoryFilters}
+          onFilterChange={handleFilterChange}
+          filterStates={filterStates}
         />
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="body2">
-            {priceRange[0].toLocaleString()} {unit}
-          </Typography>
-          <Typography variant="body2">
-            {priceRange[1].toLocaleString()} {unit}
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* Checklist Filter */}
-      <Divider sx={{ color: "#f0f0f0", margin: "0.5rem" }} />
-      <Box mt={2}>
-        <Typography gutterBottom fontWeight="bold">
-          Options
-        </Typography>
-        <Box display="flex" flexDirection="column">
-          {(showAll ? checklistOptions : checklistOptions.slice(0, 5)).map(
-            (option) => (
-              <FormControlLabel
-                key={option}
-                control={
-                  <Checkbox
-                    checked={checked.includes(option)}
-                    onChange={() => handleCheck(option)}
-                  />
-                }
-                label={option}
-              />
-            )
-          )}
-        </Box>
-        {checklistOptions.length > 8 && (
-          <Button
-            size="small"
-            onClick={() => setShowAll((prev) => !prev)}
-            sx={{ mt: 1, alignSelf: "flex-start" }}
-          >
-            {showAll ? "Show Less" : "Show More"}
-          </Button>
-        )}
-      </Box>
-
-      {/* Toggle Filter */}
-      <Box mt={2}>
-        <Typography gutterBottom fontWeight="bold">
-          supports usb?
-        </Typography>
-        <Box display="flex" alignItems="center" gap={1}>
-          <Typography
-            variant="body2"
-            color={!toggle ? "primary" : "text.secondary"}
-          >
-            no
-          </Typography>
-          <Switch
-            checked={toggle}
-            onChange={() => setToggle((v) => !v)}
-            color="primary"
-          />
-          <Typography
-            variant="body2"
-            color={toggle ? "primary" : "text.secondary"}
-          >
-            yes
-          </Typography>
-        </Box>
-      </Box>
+      )}
 
       {/* Action Buttons */}
       <Box mt={3} display="flex" gap={2}>
