@@ -1,6 +1,4 @@
 import { ImageSlider } from "../components/ImageSlider";
-import MegaMenu from "../components/MegaMenu";
-import { useCategoryData } from "../hooks/useCategoryData";
 import p1 from "../assets/01.jpg";
 import p2 from "../assets/02.jpg";
 import p3 from "../assets/03.jpg";
@@ -16,18 +14,7 @@ const IMAGES = [
 ];
 
 function Homepage() {
-  const { categories, loading } = useCategoryData();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <div>
-      <MegaMenu categories={categories} />
-      <ImageSlider images={IMAGES} />
-    </div>
-  );
+  return <ImageSlider images={IMAGES} />;
 }
 
 export default Homepage;
