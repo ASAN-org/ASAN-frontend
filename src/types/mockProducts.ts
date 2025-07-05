@@ -1,27 +1,23 @@
 // MOCK PRODUCT DATA FOR DEVELOPMENT/TESTING ONLY. DO NOT USE IN PRODUCTION.
 import type { Product } from "./Product";
 
-// Example categories and subcategories that might match the real API
+// Categories and subcategories from backend data
 const categories = [
-  { name: "Mobile", sub: ["iPhone", "Samsung", "Xiaomi", "Huawei"] },
-  { name: "Laptop", sub: ["Gaming", "Business", "Student", "MacBook"] },
-  { name: "Camera", sub: ["DSLR", "Mirrorless", "Action", "Compact"] },
-  { name: "Fashion", sub: ["Men", "Women", "Kids", "Accessories"] },
-  { name: "Home", sub: ["Furniture", "Kitchen", "Decor", "Garden"] },
-  { name: "Sports", sub: ["Fitness", "Outdoor", "Team Sports", "Yoga"] },
-  { name: "Books", sub: ["Fiction", "Non-Fiction", "Comics", "Academic"] },
-  { name: "Electronics", sub: ["Audio", "Video", "Gaming", "Smart Home"] },
+  { name: "mobile", sub: ["IPhone", "Samsung", "Xiaomi"] },
+  { name: "laptop", sub: ["Lenovo", "Asus", "HP"] },
+  { name: "headphone", sub: ["Anker", "HTC", "TSCO"] },
 ];
 
 const brands = [
   "Apple",
   "Samsung",
-  "Sony",
-  "Nike",
-  "Adidas",
-  "IKEA",
-  "Canon",
-  "Nikon",
+  "Xiaomi",
+  "Lenovo",
+  "Asus",
+  "HP",
+  "Anker",
+  "HTC",
+  "TSCO",
 ];
 const colors = [
   "#FF6B6B",
@@ -50,8 +46,8 @@ function generatePlaceholderImage(color: string): string {
 
 export const mockProducts: Product[] = Array.from({ length: 120 }, (_, i) => {
   // Distribute products across all categories and subcategories
-  const catIdx = Math.floor(i / 15); // 8 categories
-  const subIdx = Math.floor((i % 15) / 4); // 4 subcategories per category
+  const catIdx = Math.floor(i / 40); // 3 categories
+  const subIdx = Math.floor((i % 40) / 14); // ~14 products per subcategory
   const category = categories[catIdx % categories.length];
   const subCategory = category.sub[subIdx % category.sub.length];
   const color = colors[i % colors.length];

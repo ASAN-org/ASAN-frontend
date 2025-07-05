@@ -14,6 +14,15 @@ interface WebShopData {
     children: string[];
   }>;
   title: string;
+  products_page: {
+    default_sort_option: string;
+    items_per_row: number;
+    sort_options: Array<{
+      key: string;
+      label: string;
+      order: number;
+    }>;
+  };
 }
 
 function App() {
@@ -49,7 +58,14 @@ function App() {
     <Route
       key={category.name}
       path={`/${formatUrlSegment(normalizeCategoryName(category.name))}`}
-      element={<ProductsPage category={normalizeCategoryName(category.name)} />}
+      element={
+        <ProductsPage 
+          category={normalizeCategoryName(category.name)} 
+          itemsPerPage={webShopData.products_page.items_per_row}
+          sortOptions={webShopData.products_page.sort_options}
+          defaultSort={webShopData.products_page.default_sort_option}
+        />
+      }
     />,
     // Subcategory pages
     ...category.children.map((subCategory) => (
@@ -62,6 +78,9 @@ function App() {
           <ProductsPage
             category={normalizeCategoryName(category.name)}
             subCategory={subCategory}
+            itemsPerPage={webShopData.products_page.items_per_row}
+            sortOptions={webShopData.products_page.sort_options}
+            defaultSort={webShopData.products_page.default_sort_option}
           />
         }
       />

@@ -6,26 +6,38 @@ import {
   Stack,
 } from "@mui/material";
 import Filter from "./../components/Filter";
+import SortDropdown from "./../components/SortDropdown";
 import { mockProducts } from "../types/mockProducts";
 import { useTheme } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 type ProductsPageProps = {
   category: string;
   subCategory?: string;
+  itemsPerPage: number;
+  sortOptions: Array<{ key: string; label: string; order: number }>;
+  defaultSort: string;
 };
 
 const ProductsPage: React.FC<ProductsPageProps> = ({
   category,
   subCategory,
+  itemsPerPage,
+  sortOptions,
+  defaultSort,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12; // Show 12 products per page
+  const [currentSort, setCurrentSort] = useState(defaultSort);
 
   // Debug: Log the category and subCategory values
-  console.log("ProductsPage received:", { category, subCategory });
+  console.log("ProductsPage received:", {
+    category,
+    subCategory,
+    itemsPerPage,
+    defaultSort,
+  });
 
   // Find related products for the current category/subCategory
   const allRelatedProducts = mockProducts.filter(
@@ -36,11 +48,35 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
         : true)
   );
 
+  // Sort products based on current sort option
+  const sortedProducts = useMemo(() => {
+    const products = [...allRelatedProducts];
+
+    switch (currentSort) {
+      case "price_asc":
+        return products.sort((a, b) => (a.price || 0) - (b.price || 0));
+      case "price_desc":
+        return products.sort((a, b) => (b.price || 0) - (a.price || 0));
+      case "newest":
+        return products.sort(
+          (a, b) => parseInt(a.id.split("-")[1]) - parseInt(b.id.split("-")[1])
+        );
+      case "popular":
+      default:
+        // For popular, we'll use a simple algorithm based on discount and price
+        return products.sort((a, b) => {
+          const aScore = (a.discount || 0) * 10 + (a.price || 0);
+          const bScore = (b.discount || 0) * 10 + (b.price || 0);
+          return bScore - aScore;
+        });
+    }
+  }, [allRelatedProducts, currentSort]);
+
   // Calculate pagination
-  const totalPages = Math.ceil(allRelatedProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const relatedProducts = allRelatedProducts.slice(startIndex, endIndex);
+  const relatedProducts = sortedProducts.slice(startIndex, endIndex);
 
   console.log("Found related products:", allRelatedProducts.length);
 
@@ -53,15 +89,50 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleSortChange = (sortKey: string) => {
+    setCurrentSort(sortKey);
+    setCurrentPage(1); // Reset to first page when sorting changes
+  };
+
   return (
     <Box display={isMobile ? "block" : "flex"} gap={4} p={2}>
       <Box flexShrink={0}>
-        <Filter category={category} subCategory={subCategory} />
+        <Filter
+          category={category}
+          subCategory={subCategory}
+          sortOptions={sortOptions}
+          currentSort={currentSort}
+          onSortChange={handleSortChange}
+        />
       </Box>
       <Box flex={1}>
-        <Typography variant="h5" mb={3} fontWeight={600}>
-          Related Products ({allRelatedProducts.length})
-        </Typography>
+        {/* Desktop: Sort dropdown in header */}
+        {!isMobile && (
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={3}
+            gap={2}
+          >
+            <Typography variant="h5" fontWeight={600}>
+              Related Products ({allRelatedProducts.length})
+            </Typography>
+
+            <SortDropdown
+              sortOptions={sortOptions}
+              currentSort={currentSort}
+              onSortChange={handleSortChange}
+            />
+          </Box>
+        )}
+
+        {/* Mobile: Title only */}
+        {isMobile && (
+          <Typography variant="h5" mb={3} mt={2} fontWeight={600}>
+            Related Products ({allRelatedProducts.length})
+          </Typography>
+        )}
 
         {relatedProducts.length > 0 ? (
           <>
@@ -221,7 +292,8 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                   }}
                 />
                 <Typography variant="body2" color="text.secondary">
-                  Page {currentPage} of {totalPages}
+                  Page {currentPage} of {totalPages} • {itemsPerPage} items per
+                  page
                 </Typography>
               </Stack>
             )}

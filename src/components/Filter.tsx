@@ -19,13 +19,23 @@ import { useTheme } from "@mui/material/styles";
 import { createSubcategoryUrl } from "../utils/urlUtils";
 import { useCategoryData } from "../hooks/useCategoryData";
 import DynamicFilter from "./DynamicFilter";
+import SortDropdown from "./SortDropdown";
 
 type FilterProps = {
   category: string;
   subCategory?: string;
+  sortOptions?: Array<{ key: string; label: string; order: number }>;
+  currentSort?: string;
+  onSortChange?: (sortKey: string) => void;
 };
 
-const Filter: React.FC<FilterProps> = ({ category, subCategory }) => {
+const Filter: React.FC<FilterProps> = ({ 
+  category, 
+  subCategory, 
+  sortOptions = [],
+  currentSort = "popular",
+  onSortChange = () => {}
+}) => {
   const { findCategoryByName, getFiltersForCategory, loading } =
     useCategoryData();
   const filteredCategory = findCategoryByName(category);
@@ -99,9 +109,18 @@ const Filter: React.FC<FilterProps> = ({ category, subCategory }) => {
   if (isMobile) {
     return (
       <>
-        <IconButton color="primary" onClick={() => setOpen(true)}>
-          <FilterListIcon />
-        </IconButton>
+        <Box display="flex" gap={1} alignItems="center">
+          <IconButton color="primary" onClick={() => setOpen(true)}>
+            <FilterListIcon />
+          </IconButton>
+          {sortOptions.length > 0 && (
+            <SortDropdown
+              sortOptions={sortOptions}
+              currentSort={currentSort}
+              onSortChange={onSortChange}
+            />
+          )}
+        </Box>
         {open && (
           <Paper
             elevation={4}
