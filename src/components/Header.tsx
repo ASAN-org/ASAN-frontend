@@ -38,6 +38,7 @@ export default function Header() {
         width="100%"
         sx={{ backgroundColor: "#f0f0f0" }}
         flexDirection="column"
+        marginBottom={isMobile ? 1 : 3}
       >
         {isMobile ? (
           <Box
