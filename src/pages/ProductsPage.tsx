@@ -81,7 +81,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
   console.log("Found related products:", allRelatedProducts.length);
 
   const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
+    _event: React.ChangeEvent<unknown>,
     page: number
   ) => {
     setCurrentPage(page);
