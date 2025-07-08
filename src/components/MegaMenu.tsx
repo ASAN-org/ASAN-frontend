@@ -14,17 +14,24 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
-import webShopData from "../../public/data/webshop.json";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { useNavigate } from "react-router-dom";
+import { createCategoryUrl, createSubcategoryUrl } from "../utils/urlUtils";
 
-interface CategoryProps {
+export type Categories = Array<{
   name: string;
   children: string[];
-}
+}>;
 
-export default function MegaMenu() {
+type MegaMenuProps = {
+  categories: Categories;
+  siteTitle?: string;
+};
+
+const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -32,13 +39,14 @@ export default function MegaMenu() {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
 
   const handleMouseEnter = (
     event: React.MouseEvent<HTMLElement>,
-    category: string
+    categoryName: string
   ) => {
     setAnchorEl(event.currentTarget);
-    setOpenCategory(category);
+    setOpenCategory(categoryName);
   };
 
   const handleMouseLeave = () => {
@@ -50,8 +58,18 @@ export default function MegaMenu() {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleCategoryClick = (category: string) => {
-    setExpandedCategory(expandedCategory === category ? null : category);
+  const handleCategoryClick = (categoryName: string) => {
+    setExpandedCategory(
+      expandedCategory === categoryName ? null : categoryName
+    );
+  };
+
+  const handleNavigate = (categoryName: string, subCategory?: string) => {
+    if (subCategory) {
+      navigate(createSubcategoryUrl(categoryName, subCategory));
+    } else {
+      navigate(createCategoryUrl(categoryName));
+    }
   };
 
   const MobileMenu = (
@@ -66,14 +84,30 @@ export default function MegaMenu() {
         },
       }}
     >
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        p={2}
+        borderBottom={1}
+        borderColor="divider"
+      >
+        <Typography variant="h6">{siteTitle || "Menu"}</Typography>
+        <IconButton onClick={handleMobileMenuToggle} aria-label="close menu">
+          <CloseIcon />
+        </IconButton>
+      </Box>
       <List>
-        {webShopData.categories.map((category: CategoryProps) => (
+        {categories.map((category) => (
           <Box key={category.name}>
             <ListItem
               onClick={() => handleCategoryClick(category.name)}
               sx={{ cursor: "pointer" }}
             >
-              <ListItemText primary={category.name} />
+              <ListItemText
+                primary={category.name}
+                onClick={() => handleNavigate(category.name)}
+              />
               {expandedCategory === category.name ? (
                 <ExpandLess />
               ) : (
@@ -86,8 +120,12 @@ export default function MegaMenu() {
               unmountOnExit
             >
               <List component="div" disablePadding>
-                {category.children.map((subCategory: string) => (
-                  <ListItem key={subCategory} sx={{ pl: 4, cursor: "pointer" }}>
+                {category.children.map((subCategory) => (
+                  <ListItem
+                    key={subCategory}
+                    sx={{ pl: 4, cursor: "pointer" }}
+                    onClick={() => handleNavigate(category.name, subCategory)}
+                  >
                     <ListItemText primary={subCategory} />
                   </ListItem>
                 ))}
@@ -101,10 +139,11 @@ export default function MegaMenu() {
 
   const DesktopMenu = (
     <Box display="flex" justifyContent="center" onMouseLeave={handleMouseLeave}>
-      {webShopData.categories.map((category: CategoryProps) => (
+      {categories.map((category) => (
         <Box key={category.name}>
           <Button
             onMouseEnter={(e) => handleMouseEnter(e, category.name)}
+            onClick={() => handleNavigate(category.name)}
             sx={{
               color: "white",
               textTransform: "none",
@@ -134,8 +173,9 @@ export default function MegaMenu() {
               onMouseLeave={handleMouseLeave}
             >
               <Box display="flex" flexDirection="column" gap={1}>
-                {category.children.map((subCategory: string) => (
+                {category.children.map((subCategory) => (
                   <Typography
+                    onClick={() => handleNavigate(category.name, subCategory)}
                     key={subCategory}
                     sx={{
                       p: 1,
@@ -160,12 +200,12 @@ export default function MegaMenu() {
     <Box
       sx={{
         width: "100%",
-        backgroundColor: "black",
-        color: "white",
+        backgroundColor: isMobile ? "transparent" : "black",
+        color: isMobile ? "black" : "white",
       }}
     >
       {isMobile ? (
-        <Box px={2} py={1}>
+        <Box px={1} py={1}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -181,4 +221,6 @@ export default function MegaMenu() {
       )}
     </Box>
   );
-}
+};
+
+export default MegaMenu;
