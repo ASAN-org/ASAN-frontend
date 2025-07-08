@@ -12,7 +12,7 @@ const CartBadge = styled(Badge)`
 
 export default function IconButtonWithBadge() {
   return (
-    <IconButton>
+    <IconButton sx={{ marginRight: "10px" }}>
       <ShoppingCartIcon fontSize="small" />
       <CartBadge badgeContent={2} color="primary" overlap="circular" />
     </IconButton>
