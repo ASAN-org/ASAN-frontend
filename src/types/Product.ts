@@ -10,6 +10,6 @@ export interface Product {
   discount?: number;
 }
 
-interface ProdutDetails {
-  id: string;
-}
+// interface ProdutDetails {
+//   id: string;
+// }
