@@ -9,3 +9,7 @@ export interface Product {
   subCategory: string;
   discount?: number;
 }
+
+// interface ProdutDetails {
+//   id: string;
+// }
