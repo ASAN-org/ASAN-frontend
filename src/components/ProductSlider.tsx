@@ -42,7 +42,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        maxWidth: 1300,
+        maxWidth: { xs: "100%", md: CONTAINER_WIDTH },
         mx: "auto",
         mb: 3
       }}>

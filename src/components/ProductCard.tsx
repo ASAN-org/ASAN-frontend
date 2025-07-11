@@ -25,10 +25,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         overflow: "hidden",
         position: "relative",
         transition: "all 0.3s ease",
+        mt: 1, // Top margin
+        mb: 1,
         "&:hover": {
           boxShadow:
             "0 4px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.5)",
           cursor: "pointer",
+
         },
       }}
     >
