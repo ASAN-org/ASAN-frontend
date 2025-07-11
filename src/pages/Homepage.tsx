@@ -17,6 +17,7 @@ const IMAGES = [
   { url: p5, alt: "Pic Five" },
 ];
 const top12Products = mockProducts.slice(0, 12);
+const secodn12Products = mockProducts.slice(12, 24);
 
 function Homepage() {
   return (
@@ -28,8 +29,10 @@ function Homepage() {
       </Box>
       <Box sx={{mt: 9}}>
         <ProductSlider products={top12Products} />
+        <ProductSlider products={secodn12Products} />
         <MiniImageSlider images={IMAGES} />
         <ProductSlider products={top12Products} />
+        <ProductSlider products={secodn12Products} />
       </Box>
 
     </Box>

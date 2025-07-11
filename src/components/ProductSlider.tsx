@@ -35,7 +35,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
     <Box sx={{
       width: "100%",
       overflow: "hidden",
-      px: { xs: 2, md: 4 }
+      px: { xs: 2, md: 4 },
+      
     }}>
       {/* Header Section */}
       <Box sx={{
@@ -44,7 +45,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({ products }) => {
         alignItems: "center",
         maxWidth: { xs: "100%", md: CONTAINER_WIDTH },
         mx: "auto",
-        mb: 3
+        mt: 3,
+        mb:1,
       }}>
         <Typography variant="h5" sx={{ 
           fontWeight: "bold",
