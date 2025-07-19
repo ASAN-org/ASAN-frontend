@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Container,
-  Grid,
   Typography,
   Box,
-  Card,
-  CardContent,
   Chip,
   Rating,
-  Divider,
   Button,
   Paper,
   Tabs,
@@ -17,7 +13,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Badge,
   Breadcrumbs,
   Link,
   useMediaQuery,
@@ -27,6 +22,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { mockProducts } from "../types/mockProducts";
 import { formatUrlSegment, normalizeCategoryName } from "../utils/urlUtils";
 import ProductSlider from "../components/ProductSlider";
+import LoadingSpinner from "../components/LoadingSpinner";
 import type { Product } from "../types/Product";
 
 interface TabPanelProps {
@@ -55,11 +51,37 @@ const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [tabValue, setTabValue] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  // Simulate loading time for product data
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [productId]);
+
   // Find the product by ID
   const product = mockProducts.find((p) => p.id === productId);
+
+  if (isLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "400px",
+          }}
+        >
+          <LoadingSpinner message="Loading product details..." />
+        </Box>
+      </Container>
+    );
+  }
 
   if (!product) {
     return (
@@ -71,7 +93,7 @@ const ProductDetail: React.FC = () => {
     );
   }
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
@@ -114,8 +136,14 @@ const ProductDetail: React.FC = () => {
         }
 
         // Name similarity (check if names have common words)
-        const currentWords = currentProduct.name.toLowerCase().split(" ").filter(word => word.length > 2);
-        const productWords = p.name.toLowerCase().split(" ").filter(word => word.length > 2);
+        const currentWords = currentProduct.name
+          .toLowerCase()
+          .split(" ")
+          .filter((word) => word.length > 2);
+        const productWords = p.name
+          .toLowerCase()
+          .split(" ")
+          .filter((word) => word.length > 2);
         const commonWords = currentWords.filter((word) =>
           productWords.some(
             (pWord) => pWord.includes(word) || word.includes(pWord)
@@ -137,7 +165,11 @@ const ProductDetail: React.FC = () => {
         }
 
         // Material match
-        if (p.material && currentProduct.material && p.material === currentProduct.material) {
+        if (
+          p.material &&
+          currentProduct.material &&
+          p.material === currentProduct.material
+        ) {
           score += 5;
         }
 
@@ -241,9 +273,15 @@ const ProductDetail: React.FC = () => {
         </Typography>
       </Breadcrumbs>
 
-      <Grid container spacing={isMobile ? 2 : 4}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          gap: isMobile ? 2 : 4,
+        }}
+      >
         {/* Product Images */}
-        <Grid item xs={12} md={6}>
+        <Box sx={{ flex: isMobile ? "none" : "0 0 50%" }}>
           <Paper elevation={2} sx={{ p: isMobile ? 1 : 2 }}>
             <Box sx={{ mb: 2 }}>
               <img
@@ -298,10 +336,10 @@ const ProductDetail: React.FC = () => {
               </Box>
             )}
           </Paper>
-        </Grid>
+        </Box>
 
         {/* Product Info */}
-        <Grid item xs={12} md={6}>
+        <Box sx={{ flex: isMobile ? "none" : "0 0 50%" }}>
           <Box>
             <Typography
               variant={isMobile ? "h5" : "h4"}
@@ -445,8 +483,8 @@ const ProductDetail: React.FC = () => {
               </Box>
             )}
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       {/* Product Details Tabs */}
       <Box sx={{ mt: isMobile ? 4 : 6 }}>

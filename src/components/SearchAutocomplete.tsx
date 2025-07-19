@@ -19,6 +19,7 @@ import {
   Inventory as ProductIcon,
 } from "@mui/icons-material";
 import { searchAll, type SearchSuggestion } from "../utils/searchUtils";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface SearchAutocompleteProps {
   query: string;
@@ -151,13 +152,16 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
       <List sx={{ p: 0 }}>
         {loading ? (
           <ListItem>
-            <ListItemText
-              primary={
-                <Typography variant="body2" color="text.secondary">
-                  Searching...
-                </Typography>
-              }
-            />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                width: "100%",
+              }}
+            >
+              <LoadingSpinner size="small" message="Searching..." />
+            </Box>
           </ListItem>
         ) : suggestions.length === 0 ? (
           <ListItem>

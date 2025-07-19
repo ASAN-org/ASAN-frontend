@@ -3,7 +3,6 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
-  Grid,
   Paper,
   Slider,
   FormControl,
@@ -17,8 +16,7 @@ import {
 } from "@mui/material";
 import { searchProductsForPage, getPriceRange } from "../utils/searchUtils";
 import { mockProducts } from "../types/mockProducts";
-import ProductCard from "../components/ProductCard";
-import type { Product } from "../types/Product";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const SearchResults: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -33,6 +31,7 @@ const SearchResults: React.FC = () => {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
   const [sortBy, setSortBy] = useState("relevance");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const itemsPerPage = 12;
 
   // Get search results
@@ -114,13 +113,19 @@ const SearchResults: React.FC = () => {
     _event: Event,
     newValue: number | number[]
   ) => {
+    setIsLoading(true);
     setPriceRange(newValue as [number, number]);
     setCurrentPage(1); // Reset to first page when filter changes
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   const handleSortChange = (event: any) => {
+    setIsLoading(true);
     setSortBy(event.target.value);
     setCurrentPage(1); // Reset to first page when sort changes
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   const getSearchTitle = () => {
@@ -181,6 +186,7 @@ const SearchResults: React.FC = () => {
               min={minPrice}
               max={maxPrice}
               step={10}
+              disabled={isLoading}
               sx={{ mb: 2 }}
             />
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -225,6 +231,7 @@ const SearchResults: React.FC = () => {
               <Select
                 value={sortBy}
                 onChange={handleSortChange}
+                disabled={isLoading}
                 sx={{
                   fontFamily: "'Anjoman-FaNum-Medium'",
                 }}
@@ -281,7 +288,11 @@ const SearchResults: React.FC = () => {
         )}
 
         {/* Products Grid */}
-        {paginatedResults.length > 0 ? (
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+            <LoadingSpinner message="Loading search results..." />
+          </Box>
+        ) : paginatedResults.length > 0 ? (
           <>
             <Box
               display="grid"
@@ -433,6 +444,7 @@ const SearchResults: React.FC = () => {
                   size={isMobile ? "small" : "medium"}
                   showFirstButton
                   showLastButton
+                  disabled={isLoading}
                   sx={{
                     "& .MuiPaginationItem-root": {
                       borderRadius: "8px",

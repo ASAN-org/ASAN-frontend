@@ -78,68 +78,54 @@ const searchProducts = (query: string): SearchResult[] => {
 
   mockProducts.forEach((product) => {
     let score = 0;
-    let bestMatch = "";
 
     // Priority 1: Exact name match
     if (product.name.toLowerCase() === queryLower) {
       score += 100;
-      bestMatch = product.name;
     }
     // Priority 2: Name contains query
     else if (product.name.toLowerCase().includes(queryLower)) {
       score += 80;
-      bestMatch = product.name;
     }
     // Priority 3: Brand exact match
     else if (product.brand.toLowerCase() === queryLower) {
       score += 70;
-      bestMatch = product.brand;
     }
     // Priority 4: Brand contains query
     else if (product.brand.toLowerCase().includes(queryLower)) {
       score += 60;
-      bestMatch = product.brand;
     }
     // Priority 5: Category exact match
     else if (product.category.toLowerCase() === queryLower) {
       score += 50;
-      bestMatch = product.category;
     }
     // Priority 6: Subcategory exact match
     else if (product.subCategory.toLowerCase() === queryLower) {
       score += 45;
-      bestMatch = product.subCategory;
     }
     // Priority 7: Description contains query
     else if (product.description?.toLowerCase().includes(queryLower)) {
       score += 30;
-      bestMatch = product.description;
     }
     // Priority 8: Tags contain query
     else if (
       product.tags?.some((tag) => tag.toLowerCase().includes(queryLower))
     ) {
       score += 25;
-      bestMatch =
-        product.tags.find((tag) => tag.toLowerCase().includes(queryLower)) ||
-        "";
     }
     // Priority 9: Color match
     else if (product.color?.toLowerCase().includes(queryLower)) {
       score += 20;
-      bestMatch = product.color;
     }
     // Priority 10: Material match
     else if (product.material?.toLowerCase().includes(queryLower)) {
       score += 15;
-      bestMatch = product.material;
     }
     // Priority 11: Fuzzy matching for name
     else {
       const nameSimilarity = calculateStringSimilarity(product.name, query);
       if (nameSimilarity > 0.3) {
         score += nameSimilarity * 40;
-        bestMatch = product.name;
       }
     }
 

@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Filter from "./../components/Filter";
 import SortDropdown from "./../components/SortDropdown";
+import LoadingSpinner from "./../components/LoadingSpinner";
 import { mockProducts } from "../types/mockProducts";
 import { useTheme } from "@mui/material/styles";
 import { useState, useMemo } from "react";
@@ -32,6 +33,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSort, setCurrentSort] = useState(defaultSort);
+  const [isLoading, setIsLoading] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<{
     [key: string]: number[] | string[] | boolean;
   }>({});
@@ -183,20 +185,29 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
   };
 
   const handleSortChange = (sortKey: string) => {
+    setIsLoading(true);
     setCurrentSort(sortKey);
     setCurrentPage(1); // Reset to first page when sorting changes
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   const handleApplyFilters = (filters: {
     [key: string]: number[] | string[] | boolean;
   }) => {
+    setIsLoading(true);
     setAppliedFilters(filters);
     setCurrentPage(1); // Reset to first page when filters change
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   const handleClearFilters = () => {
+    setIsLoading(true);
     setAppliedFilters({});
     setCurrentPage(1); // Reset to first page when filters change
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   return (
@@ -236,6 +247,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
               sortOptions={sortOptions}
               currentSort={currentSort}
               onSortChange={handleSortChange}
+              isLoading={isLoading}
             />
           </Box>
         )}
@@ -247,7 +259,18 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
           </Typography>
         )}
 
-        {relatedProducts.length > 0 ? (
+        {isLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "400px",
+            }}
+          >
+            <LoadingSpinner message="Loading products..." />
+          </Box>
+        ) : relatedProducts.length > 0 ? (
           <>
             <Box
               display="grid"
@@ -399,6 +422,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                   size={isMobile ? "small" : "medium"}
                   showFirstButton
                   showLastButton
+                  disabled={isLoading}
                   sx={{
                     "& .MuiPaginationItem-root": {
                       borderRadius: "8px",

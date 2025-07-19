@@ -20,6 +20,7 @@ import { createSubcategoryUrl } from "../utils/urlUtils";
 import { useCategoryData } from "../hooks/useCategoryData";
 import DynamicFilter from "./DynamicFilter";
 import SortDropdown from "./SortDropdown";
+import LoadingSpinner from "./LoadingSpinner";
 
 type FilterProps = {
   category: string;
@@ -109,7 +110,11 @@ const Filter: React.FC<FilterProps> = ({
   };
 
   if (loading) {
-    return <div>Loading filters...</div>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 3 }}>
+        <LoadingSpinner message="Loading filters..." />
+      </Box>
+    );
   }
 
   const handleFilterChange = (
@@ -153,6 +158,7 @@ const Filter: React.FC<FilterProps> = ({
               sortOptions={sortOptions}
               currentSort={currentSort}
               onSortChange={onSortChange}
+              isLoading={loading}
             />
           )}
         </Box>

@@ -6,6 +6,7 @@ import Homepage from "./pages/Homepage";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
 
@@ -48,7 +49,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner message="Loading application..." fullScreen />;
   }
 
   if (!webShopData) {
