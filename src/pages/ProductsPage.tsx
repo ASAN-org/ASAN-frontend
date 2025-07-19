@@ -5,6 +5,7 @@ import {
   Pagination,
   Stack,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Filter from "./../components/Filter";
 import SortDropdown from "./../components/SortDropdown";
 import { mockProducts } from "../types/mockProducts";
@@ -28,6 +29,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSort, setCurrentSort] = useState(defaultSort);
 
@@ -150,6 +152,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
               {relatedProducts.map((product) => (
                 <Box
                   key={product.id}
+                  onClick={() => navigate(`/product/${product.id}`)}
                   sx={{
                     background: "#ffffff",
                     borderRadius: "12px",

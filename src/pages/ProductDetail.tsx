@@ -18,9 +18,14 @@ import {
   ListItem,
   ListItemText,
   Badge,
+  Breadcrumbs,
+  Link,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import { mockProducts } from "../types/mockProducts";
-import Breadcrumb from "../components/Breadcrumb";
+import { formatUrlSegment, normalizeCategoryName } from "../utils/urlUtils";
 import type { Product } from "../types/Product";
 
 interface TabPanelProps {
@@ -49,6 +54,8 @@ const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [tabValue, setTabValue] = useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   // Find the product by ID
   const product = mockProducts.find((p) => p.id === productId);
@@ -71,25 +78,92 @@ const ProductDetail: React.FC = () => {
     ? product.price! - (product.price! * product.discount) / 100
     : product.price;
 
-  return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Breadcrumb
-        category={product.category}
-        subCategory={product.subCategory}
-        productName={product.name}
-      />
+    return (
+    <Container maxWidth="lg" sx={{ py: isMobile ? 2 : 4, px: isMobile ? 1 : 3 }}>
+      {/* Material-UI Breadcrumbs */}
+      <Breadcrumbs 
+        aria-label="breadcrumb" 
+        sx={{ 
+          mb: 3, 
+          mt: 2,
+          "& .MuiBreadcrumbs-ol": {
+            flexWrap: "wrap"
+          }
+        }}
+      >
+        <Link
+          component={RouterLink}
+          to="/"
+          color="inherit"
+          sx={{
+            fontFamily: "'Anjoman-FaNum-Medium'",
+            fontSize: "0.9rem",
+            textDecoration: "none",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          Home
+        </Link>
+        <Link
+          component={RouterLink}
+          to={`/${formatUrlSegment(normalizeCategoryName(product.category))}`}
+          color="inherit"
+          sx={{
+            fontFamily: "'Anjoman-FaNum-Medium'",
+            fontSize: "0.9rem",
+            textDecoration: "none",
+            "&:hover": {
+              textDecoration: "underline",
+            },
+          }}
+        >
+          {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+        </Link>
+        {product.subCategory && (
+          <Link
+            component={RouterLink}
+            to={`/${formatUrlSegment(normalizeCategoryName(product.category))}/${formatUrlSegment(product.subCategory)}`}
+            color="inherit"
+            sx={{
+              fontFamily: "'Anjoman-FaNum-Medium'",
+              fontSize: "0.9rem",
+              textDecoration: "none",
+              "&:hover": {
+                textDecoration: "underline",
+              },
+            }}
+          >
+            {product.subCategory}
+          </Link>
+        )}
+        <Typography
+          color="text.primary"
+          sx={{
+            fontFamily: "'Anjoman-FaNum-Medium'",
+            fontSize: "0.9rem",
+            maxWidth: "200px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap"
+          }}
+        >
+          {product.name}
+        </Typography>
+      </Breadcrumbs>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={isMobile ? 2 : 4}>
         {/* Product Images */}
         <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 2 }}>
+          <Paper elevation={2} sx={{ p: isMobile ? 1 : 2 }}>
             <Box sx={{ mb: 2 }}>
               <img
                 src={product.images?.[selectedImageIndex] || product.imageUrl}
                 alt={product.name}
                 style={{
                   width: "100%",
-                  height: "400px",
+                  height: isMobile ? "300px" : "400px",
                   objectFit: "contain",
                   borderRadius: "8px",
                 }}
@@ -98,14 +172,19 @@ const ProductDetail: React.FC = () => {
 
             {/* Thumbnail Gallery */}
             {product.images && product.images.length > 1 && (
-              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+              <Box sx={{ 
+                display: "flex", 
+                gap: isMobile ? 0.5 : 1, 
+                flexWrap: "wrap",
+                justifyContent: isMobile ? "center" : "flex-start"
+              }}>
                 {product.images.map((image, index) => (
                   <Box
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
                     sx={{
-                      width: 80,
-                      height: 80,
+                      width: isMobile ? 60 : 80,
+                      height: isMobile ? 60 : 80,
                       cursor: "pointer",
                       border:
                         selectedImageIndex === index
@@ -135,11 +214,12 @@ const ProductDetail: React.FC = () => {
         <Grid item xs={12} md={6}>
           <Box>
             <Typography
-              variant="h4"
+              variant={isMobile ? "h5" : "h4"}
               sx={{
                 fontFamily: "'Anjoman-FaNum-Bold'",
                 mb: 2,
                 color: "#1e293b",
+                lineHeight: 1.3,
               }}
             >
               {product.name}
@@ -158,19 +238,20 @@ const ProductDetail: React.FC = () => {
             {/* Price */}
             <Box sx={{ mb: 3 }}>
               <Typography
-                variant="h3"
+                variant={isMobile ? "h4" : "h3"}
                 sx={{
                   fontFamily: "'Anjoman-FaNum-Bold'",
                   color: "#dc2626",
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
+                  gap: isMobile ? 1 : 2,
+                  flexWrap: "wrap",
                 }}
               >
                 Rp {discountedPrice?.toLocaleString()}
                 {product.discount && (
                   <Typography
-                    variant="h5"
+                    variant={isMobile ? "h6" : "h5"}
                     sx={{
                       textDecoration: "line-through",
                       color: "#64748b",
@@ -224,24 +305,29 @@ const ProductDetail: React.FC = () => {
             </Box>
 
             {/* Action Buttons */}
-            <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+            <Box sx={{ 
+              display: "flex", 
+              gap: isMobile ? 1 : 2, 
+              mb: 3,
+              flexDirection: isMobile ? "column" : "row"
+            }}>
               <Button
                 variant="contained"
-                size="large"
+                size={isMobile ? "medium" : "large"}
                 disabled={!product.stock || product.stock <= 0}
                 sx={{
                   fontFamily: "'Anjoman-FaNum-Bold'",
-                  px: 4,
+                  px: isMobile ? 2 : 4,
                 }}
               >
                 Add to Cart
               </Button>
               <Button
                 variant="outlined"
-                size="large"
+                size={isMobile ? "medium" : "large"}
                 sx={{
                   fontFamily: "'Anjoman-FaNum-Medium'",
-                  px: 4,
+                  px: isMobile ? 2 : 4,
                 }}
               >
                 Add to Wishlist
@@ -271,16 +357,20 @@ const ProductDetail: React.FC = () => {
       </Grid>
 
       {/* Product Details Tabs */}
-      <Box sx={{ mt: 6 }}>
+      <Box sx={{ mt: isMobile ? 4 : 6 }}>
         <Paper elevation={1}>
           <Tabs
             value={tabValue}
             onChange={handleTabChange}
+            variant={isMobile ? "scrollable" : "standard"}
+            scrollButtons={isMobile ? "auto" : false}
             sx={{
               borderBottom: 1,
               borderColor: "divider",
               "& .MuiTab-root": {
                 fontFamily: "'Anjoman-FaNum-Medium'",
+                fontSize: isMobile ? "0.8rem" : "inherit",
+                minWidth: isMobile ? "auto" : "inherit",
               },
             }}
           >
@@ -290,7 +380,10 @@ const ProductDetail: React.FC = () => {
           </Tabs>
 
           <TabPanel value={tabValue} index={0}>
-            <Typography variant="body1" sx={{ lineHeight: 1.8 }}>
+            <Typography variant="body1" sx={{ 
+              lineHeight: 1.8,
+              fontSize: isMobile ? "0.9rem" : "inherit"
+            }}>
               {product.description}
             </Typography>
           </TabPanel>
