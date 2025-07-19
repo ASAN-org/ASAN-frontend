@@ -138,16 +138,27 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
   );
 
   const DesktopMenu = (
-    <Box display="flex" justifyContent="center" onMouseLeave={handleMouseLeave}>
+    <Box 
+      display="flex" 
+      justifyContent="center" 
+      onMouseLeave={handleMouseLeave}
+      sx={{ 
+        overflow: "hidden",
+        flexWrap: "wrap",
+        gap: 1
+      }}
+    >
       {categories.map((category) => (
-        <Box key={category.name}>
+        <Box key={category.name} sx={{ flexShrink: 0 }}>
           <Button
             onMouseEnter={(e) => handleMouseEnter(e, category.name)}
             onClick={() => handleNavigate(category.name)}
             sx={{
               color: "white",
               textTransform: "none",
-              px: 3,
+              px: 2,
+              minWidth: "auto",
+              fontSize: "0.9rem",
               "&:hover": {
                 backgroundColor: "rgba(255, 255, 255, 0.1)",
               },

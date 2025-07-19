@@ -21,20 +21,17 @@ const secodn12Products = mockProducts.slice(12, 24);
 
 function Homepage() {
   return (
-
-    
-    <Box >
+    <Box sx={{ overflow: "hidden" }}>
       <Box>
           <ImageSlider images={IMAGES}/>
       </Box>
-      <Box sx={{mt: 9}}>
+      <Box sx={{mt: 9, overflow: "hidden"}}>
         <ProductSlider products={top12Products} />
         <ProductSlider products={secodn12Products} />
         <MiniImageSlider images={IMAGES} />
         <ProductSlider products={top12Products} />
         <ProductSlider products={secodn12Products} />
       </Box>
-
     </Box>
   );
 }

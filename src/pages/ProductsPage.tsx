@@ -97,7 +97,12 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
   };
 
   return (
-    <Box display={isMobile ? "block" : "flex"} gap={4} p={2}>
+    <Box
+      display={isMobile ? "block" : "flex"}
+      gap={4}
+      p={2}
+      sx={{ overflow: "hidden" }}
+    >
       <Box flexShrink={0}>
         <Filter
           category={category}
@@ -107,7 +112,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
           onSortChange={handleSortChange}
         />
       </Box>
-      <Box flex={1}>
+      <Box flex={1} sx={{ overflow: "hidden" }}>
         {/* Desktop: Sort dropdown in header */}
         {!isMobile && (
           <Box

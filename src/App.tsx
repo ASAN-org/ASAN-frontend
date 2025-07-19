@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Box } from "@mui/material";
 import Header from "./components/Header";
 import Homepage from "./pages/Homepage";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetail from "./pages/ProductDetail";
+import SearchResults from "./pages/SearchResults";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
 
@@ -91,12 +93,15 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/product/:productId" element={<ProductDetail />} />
-          {dynamicRoutes}
-        </Routes>
+        <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/product/:productId" element={<ProductDetail />} />
+            <Route path="/search" element={<SearchResults />} />
+            {dynamicRoutes}
+          </Routes>
+        </Box>
       </Router>
     </QueryClientProvider>
   );
