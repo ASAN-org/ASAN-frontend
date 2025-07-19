@@ -26,6 +26,7 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import { mockProducts } from "../types/mockProducts";
 import { formatUrlSegment, normalizeCategoryName } from "../utils/urlUtils";
+import ProductSlider from "../components/ProductSlider";
 import type { Product } from "../types/Product";
 
 interface TabPanelProps {
@@ -78,17 +79,102 @@ const ProductDetail: React.FC = () => {
     ? product.price! - (product.price! * product.discount) / 100
     : product.price;
 
-    return (
-    <Container maxWidth="lg" sx={{ py: isMobile ? 2 : 4, px: isMobile ? 1 : 3 }}>
+  // Find related products
+  const getRelatedProducts = (currentProduct: Product): Product[] => {
+    const relatedProducts = mockProducts
+      .filter((p) => p.id !== currentProduct.id) // Exclude current product
+      .map((p) => {
+        let score = 0;
+
+        // Category match (highest weight)
+        if (p.category === currentProduct.category) {
+          score += 50;
+          // Subcategory match (even higher weight)
+          if (p.subCategory === currentProduct.subCategory) {
+            score += 30;
+          }
+        }
+
+        // Brand match
+        if (p.brand === currentProduct.brand) {
+          score += 25;
+        }
+
+        // Price similarity (within 30% range with better scoring)
+        if (currentProduct.price && p.price) {
+          const priceDiff =
+            Math.abs(currentProduct.price - p.price) / currentProduct.price;
+          if (priceDiff <= 0.1) {
+            score += 20; // Very close price
+          } else if (priceDiff <= 0.2) {
+            score += 15; // Close price
+          } else if (priceDiff <= 0.3) {
+            score += 10; // Similar price range
+          }
+        }
+
+        // Name similarity (check if names have common words)
+        const currentWords = currentProduct.name.toLowerCase().split(" ").filter(word => word.length > 2);
+        const productWords = p.name.toLowerCase().split(" ").filter(word => word.length > 2);
+        const commonWords = currentWords.filter((word) =>
+          productWords.some(
+            (pWord) => pWord.includes(word) || word.includes(pWord)
+          )
+        );
+        if (commonWords.length >= 2) {
+          score += 15; // Multiple common words
+        } else if (commonWords.length === 1) {
+          score += 8; // One common word
+        }
+
+        // Color match
+        if (
+          p.color &&
+          currentProduct.color &&
+          p.color === currentProduct.color
+        ) {
+          score += 8;
+        }
+
+        // Material match
+        if (p.material && currentProduct.material && p.material === currentProduct.material) {
+          score += 5;
+        }
+
+        // Rating similarity (if both have ratings)
+        if (p.rating && currentProduct.rating) {
+          const ratingDiff = Math.abs(p.rating - currentProduct.rating);
+          if (ratingDiff <= 0.5) {
+            score += 5;
+          }
+        }
+
+        return { ...p, _score: score };
+      })
+      .filter((p) => p._score > 10) // Only include products with meaningful relation
+      .sort((a, b) => (b._score || 0) - (a._score || 0)) // Sort by score
+      .slice(0, 12) // Limit to 12 products
+      .map(({ _score, ...p }) => p); // Remove score from final result
+
+    return relatedProducts;
+  };
+
+  const relatedProducts = getRelatedProducts(product);
+
+  return (
+    <Container
+      maxWidth="lg"
+      sx={{ py: isMobile ? 2 : 4, px: isMobile ? 1 : 3 }}
+    >
       {/* Material-UI Breadcrumbs */}
-      <Breadcrumbs 
-        aria-label="breadcrumb" 
-        sx={{ 
-          mb: 3, 
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        sx={{
+          mb: 3,
           mt: 2,
           "& .MuiBreadcrumbs-ol": {
-            flexWrap: "wrap"
-          }
+            flexWrap: "wrap",
+          },
         }}
       >
         <Link
@@ -124,7 +210,9 @@ const ProductDetail: React.FC = () => {
         {product.subCategory && (
           <Link
             component={RouterLink}
-            to={`/${formatUrlSegment(normalizeCategoryName(product.category))}/${formatUrlSegment(product.subCategory)}`}
+            to={`/${formatUrlSegment(
+              normalizeCategoryName(product.category)
+            )}/${formatUrlSegment(product.subCategory)}`}
             color="inherit"
             sx={{
               fontFamily: "'Anjoman-FaNum-Medium'",
@@ -146,7 +234,7 @@ const ProductDetail: React.FC = () => {
             maxWidth: "200px",
             overflow: "hidden",
             textOverflow: "ellipsis",
-            whiteSpace: "nowrap"
+            whiteSpace: "nowrap",
           }}
         >
           {product.name}
@@ -172,12 +260,14 @@ const ProductDetail: React.FC = () => {
 
             {/* Thumbnail Gallery */}
             {product.images && product.images.length > 1 && (
-              <Box sx={{ 
-                display: "flex", 
-                gap: isMobile ? 0.5 : 1, 
-                flexWrap: "wrap",
-                justifyContent: isMobile ? "center" : "flex-start"
-              }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: isMobile ? 0.5 : 1,
+                  flexWrap: "wrap",
+                  justifyContent: isMobile ? "center" : "flex-start",
+                }}
+              >
                 {product.images.map((image, index) => (
                   <Box
                     key={index}
@@ -305,12 +395,14 @@ const ProductDetail: React.FC = () => {
             </Box>
 
             {/* Action Buttons */}
-            <Box sx={{ 
-              display: "flex", 
-              gap: isMobile ? 1 : 2, 
-              mb: 3,
-              flexDirection: isMobile ? "column" : "row"
-            }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: isMobile ? 1 : 2,
+                mb: 3,
+                flexDirection: isMobile ? "column" : "row",
+              }}
+            >
               <Button
                 variant="contained"
                 size={isMobile ? "medium" : "large"}
@@ -380,10 +472,13 @@ const ProductDetail: React.FC = () => {
           </Tabs>
 
           <TabPanel value={tabValue} index={0}>
-            <Typography variant="body1" sx={{ 
-              lineHeight: 1.8,
-              fontSize: isMobile ? "0.9rem" : "inherit"
-            }}>
+            <Typography
+              variant="body1"
+              sx={{
+                lineHeight: 1.8,
+                fontSize: isMobile ? "0.9rem" : "inherit",
+              }}
+            >
               {product.description}
             </Typography>
           </TabPanel>
@@ -458,6 +553,17 @@ const ProductDetail: React.FC = () => {
           </TabPanel>
         </Paper>
       </Box>
+
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <Box sx={{ mt: isMobile ? 4 : 6 }}>
+          <ProductSlider
+            products={relatedProducts}
+            title="Related Products"
+            showViewAll={false}
+          />
+        </Box>
+      )}
     </Container>
   );
 };
