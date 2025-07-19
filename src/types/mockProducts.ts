@@ -48,6 +48,30 @@ const productColors = [
   "Green",
 ];
 
+// Memory options for mobile devices
+const memoryOptions = ["64GB", "128GB", "256GB", "512GB", "1TB"];
+
+// Processor options for laptops
+const processorOptions = [
+  "Intel Core i3",
+  "Intel Core i5",
+  "Intel Core i7",
+  "Intel Core i9",
+  "AMD Ryzen 3",
+  "AMD Ryzen 5",
+  "AMD Ryzen 7",
+  "AMD Ryzen 9",
+];
+
+// Connection types for headphones
+const connectionTypes = [
+  "Wired",
+  "Bluetooth",
+  "USB-C",
+  "3.5mm Jack",
+  "Wireless",
+];
+
 function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -92,25 +116,6 @@ const productDescriptions = [
   "Premium quality with attention to detail. Crafted for performance and reliability in any situation.",
 ];
 
-const productFeatures = [
-  [
-    "Wireless Connectivity",
-    "Fast Charging",
-    "Water Resistant",
-    "Long Battery Life",
-  ],
-  ["High Performance", "Advanced Cooling", "Premium Display", "Fast Storage"],
-  [
-    "Noise Cancellation",
-    "Comfortable Fit",
-    "Crystal Clear Sound",
-    "Durable Build",
-  ],
-  ["Ergonomic Design", "Adjustable Settings", "Portable", "Easy Setup"],
-  ["Smart Features", "Voice Control", "App Integration", "Cloud Sync"],
-  ["Premium Materials", "Customizable", "Energy Efficient", "Eco-Friendly"],
-];
-
 export const mockProducts: Product[] = Array.from({ length: 120 }, (_, i) => {
   // Distribute products across all categories and subcategories
   const catIdx = Math.floor(i / 40); // 3 categories
@@ -120,7 +125,108 @@ export const mockProducts: Product[] = Array.from({ length: 120 }, (_, i) => {
   const color = colors[i % colors.length];
   const productName = `${category.name} ${subCategory} Product ${i + 1}`;
   const brand = brands[getRandomInt(0, brands.length - 1)];
-  const price = getRandomInt(10, 1000);
+
+  // Category-specific pricing and features
+  let price: number;
+  let features: string[];
+  let specifications: Record<string, string>;
+
+  if (category.name === "mobile") {
+    // Mobile devices: 10M-100M toman for iPhone, 5M-50M for others
+    if (subCategory === "IPhone") {
+      price = getRandomInt(10000000, 100000000);
+    } else {
+      price = getRandomInt(5000000, 50000000);
+    }
+
+    // Mobile-specific features
+    features = [
+      "5G Support",
+      "Fast Charging",
+      "Wireless Charging",
+      "Water Resistant",
+      "Long Battery Life",
+    ];
+
+    // Mobile-specific specifications
+    specifications = {
+      Brand: brand,
+      Model: `${category.name.toUpperCase()}-${i + 1}`,
+      Color: productColors[i % productColors.length],
+      "Internal Memory": memoryOptions[i % memoryOptions.length],
+      "Supports 5G": Math.random() > 0.3 ? "Yes" : "No", // 70% support 5G
+      Weight: `${getRandomInt(150, 250)}g`,
+      Dimensions: `${getRandomInt(14, 17)}cm x ${getRandomInt(
+        7,
+        9
+      )}cm x ${getRandomInt(7, 10)}mm`,
+      Warranty: `${getRandomInt(1, 2)} Year${
+        getRandomInt(1, 2) > 1 ? "s" : ""
+      }`,
+      "Battery Life": `${getRandomInt(8, 24)} hours`,
+    };
+  } else if (category.name === "laptop") {
+    // Laptops: 20M-200M toman
+    price = getRandomInt(20000000, 200000000);
+
+    // Laptop-specific features
+    features = [
+      "High Performance",
+      "Advanced Cooling",
+      "Premium Display",
+      "Fast Storage",
+      "Backlit Keyboard",
+    ];
+
+    // Laptop-specific specifications
+    specifications = {
+      Brand: brand,
+      Model: `${category.name.toUpperCase()}-${i + 1}`,
+      Color: productColors[i % productColors.length],
+      Processor: processorOptions[i % processorOptions.length],
+      "Internal Memory": memoryOptions[i % memoryOptions.length],
+      Weight: `${getRandomInt(1000, 3000)}g`,
+      Dimensions: `${getRandomInt(30, 40)}cm x ${getRandomInt(
+        20,
+        30
+      )}cm x ${getRandomInt(15, 25)}mm`,
+      Warranty: `${getRandomInt(1, 3)} Year${
+        getRandomInt(1, 3) > 1 ? "s" : ""
+      }`,
+      "Battery Life": `${getRandomInt(4, 12)} hours`,
+    };
+  } else {
+    // Headphones: 500K-5M toman
+    price = getRandomInt(500000, 5000000);
+
+    // Headphone-specific features
+    features = [
+      "Noise Cancellation",
+      "Comfortable Fit",
+      "Crystal Clear Sound",
+      "Durable Build",
+      "Wireless Connectivity",
+    ];
+
+    // Headphone-specific specifications
+    specifications = {
+      Brand: brand,
+      Model: `${category.name.toUpperCase()}-${i + 1}`,
+      Color: productColors[i % productColors.length],
+      "Connection Type": connectionTypes[i % connectionTypes.length],
+      Weight: `${getRandomInt(200, 500)}g`,
+      Dimensions: `${getRandomInt(15, 25)}cm x ${getRandomInt(
+        15,
+        25
+      )}cm x ${getRandomInt(5, 10)}cm`,
+      Warranty: `${getRandomInt(1, 2)} Year${
+        getRandomInt(1, 2) > 1 ? "s" : ""
+      }`,
+      "Battery Life":
+        Math.random() > 0.5 ? `${getRandomInt(8, 30)} hours` : "N/A",
+    };
+  }
+
   const discount = Math.random() > 0.7 ? getRandomInt(5, 30) : undefined;
   const rating = 3.5 + Math.random() * 1.5; // 3.5 to 5.0
   const reviewCount = getRandomInt(10, 500);
@@ -135,38 +241,19 @@ export const mockProducts: Product[] = Array.from({ length: 120 }, (_, i) => {
     category: category.name,
     subCategory: subCategory,
     discount: discount,
-    // New detailed fields
+    // Category-specific detailed fields
     description: productDescriptions[i % productDescriptions.length],
-    specifications: {
-      Brand: brand,
-      Model: `${category.name.toUpperCase()}-${i + 1}`,
-      Color: productColors[i % productColors.length],
-      Material: materials[i % materials.length],
-      Weight: `${getRandomInt(100, 2000)}g`,
-      Dimensions: `${getRandomInt(10, 50)}cm x ${getRandomInt(
-        5,
-        30
-      )}cm x ${getRandomInt(1, 10)}cm`,
-      Warranty: `${getRandomInt(1, 3)} Year${
-        getRandomInt(1, 3) > 1 ? "s" : ""
-      }`,
-      Connectivity: Math.random() > 0.5 ? "Wireless" : "Wired",
-      "Battery Life":
-        Math.random() > 0.5 ? `${getRandomInt(8, 24)} hours` : "N/A",
-    },
+    specifications: specifications,
     images: generateProductImages(color),
     stock: stock,
     rating: Math.round(rating * 10) / 10,
     reviewCount: reviewCount,
-    weight: `${getRandomInt(100, 2000)}g`,
-    dimensions: `${getRandomInt(10, 50)}cm x ${getRandomInt(
-      5,
-      30
-    )}cm x ${getRandomInt(1, 10)}cm`,
-    warranty: `${getRandomInt(1, 3)} Year${getRandomInt(1, 3) > 1 ? "s" : ""}`,
+    weight: specifications.Weight,
+    dimensions: specifications.Dimensions,
+    warranty: specifications.Warranty,
     color: productColors[i % productColors.length],
     material: materials[i % materials.length],
-    features: productFeatures[i % productFeatures.length],
+    features: features,
     tags: [
       category.name,
       subCategory,

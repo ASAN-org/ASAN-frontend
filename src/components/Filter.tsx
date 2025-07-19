@@ -27,6 +27,9 @@ type FilterProps = {
   sortOptions?: Array<{ key: string; label: string; order: number }>;
   currentSort?: string;
   onSortChange?: (sortKey: string) => void;
+  onApplyFilters?: (filters: { [key: string]: number[] | string[] | boolean }) => void;
+  onClearFilters?: () => void;
+  appliedFilters?: { [key: string]: number[] | string[] | boolean };
 };
 
 const Filter: React.FC<FilterProps> = ({ 
@@ -34,7 +37,10 @@ const Filter: React.FC<FilterProps> = ({
   subCategory, 
   sortOptions = [],
   currentSort = "popular",
-  onSortChange = () => {}
+  onSortChange = () => {},
+  onApplyFilters = () => {},
+  onClearFilters = () => {},
+  appliedFilters = {}
 }) => {
   const { findCategoryByName, getFiltersForCategory, loading } =
     useCategoryData();
@@ -71,18 +77,25 @@ const Filter: React.FC<FilterProps> = ({
 
     currentCategoryRef.current = categoryKey;
 
+    // Use applied filters if available, otherwise initialize with defaults
     const initialStates: { [key: string]: number[] | string[] | boolean } = {};
     categoryFilters.forEach((filter) => {
-      if (filter.type === "range") {
-        initialStates[filter.label] = [filter.min || 0, filter.max || 1000000];
-      } else if (filter.type === "checklist") {
-        initialStates[filter.label] = [];
-      } else if (filter.type === "toggle") {
-        initialStates[filter.label] = false;
+      if (appliedFilters[filter.label] !== undefined) {
+        // Use applied filter value
+        initialStates[filter.label] = appliedFilters[filter.label];
+      } else {
+        // Initialize with default values
+        if (filter.type === "range") {
+          initialStates[filter.label] = [filter.min || 0, filter.max || 1000000];
+        } else if (filter.type === "checklist") {
+          initialStates[filter.label] = [];
+        } else if (filter.type === "toggle") {
+          initialStates[filter.label] = false;
+        }
       }
     });
     setFilterStates(initialStates);
-  }, [categoryFilters, category, subCategory]);
+  }, [categoryFilters, category, subCategory, appliedFilters]);
 
   // Update filter state
   const updateFilterState = (
@@ -104,6 +117,28 @@ const Filter: React.FC<FilterProps> = ({
     value: number[] | string[] | boolean
   ) => {
     updateFilterState(filterLabel, value);
+  };
+
+  const handleApplyFilters = () => {
+    onApplyFilters(filterStates);
+    if (isMobile) {
+      setOpen(false);
+    }
+  };
+
+  const handleClearFilters = () => {
+    const clearedStates: { [key: string]: number[] | string[] | boolean } = {};
+    categoryFilters.forEach((filter) => {
+      if (filter.type === "range") {
+        clearedStates[filter.label] = [filter.min || 0, filter.max || 1000000];
+      } else if (filter.type === "checklist") {
+        clearedStates[filter.label] = [];
+      } else if (filter.type === "toggle") {
+        clearedStates[filter.label] = false;
+      }
+    });
+    setFilterStates(clearedStates);
+    onClearFilters();
   };
 
   if (isMobile) {
@@ -230,9 +265,7 @@ const Filter: React.FC<FilterProps> = ({
                   variant="contained"
                   color="primary"
                   fullWidth
-                  onClick={() => {
-                    /* TODO: Apply filter logic */
-                  }}
+                  onClick={handleApplyFilters}
                 >
                   Apply Filters
                 </Button>
@@ -240,9 +273,7 @@ const Filter: React.FC<FilterProps> = ({
                   variant="outlined"
                   color="secondary"
                   //fullWidth
-                  onClick={() => {
-                    /* TODO: Clear filter logic */
-                  }}
+                  onClick={handleClearFilters}
                 >
                   Clear
                 </Button>
@@ -313,9 +344,7 @@ const Filter: React.FC<FilterProps> = ({
           variant="contained"
           color="primary"
           fullWidth
-          onClick={() => {
-            /* TODO: Apply filter logic */
-          }}
+          onClick={handleApplyFilters}
         >
           Apply Filters
         </Button>
@@ -323,9 +352,7 @@ const Filter: React.FC<FilterProps> = ({
           variant="outlined"
           color="secondary"
           //fullWidth
-          onClick={() => {
-            /* TODO: Clear filter logic */
-          }}
+          onClick={handleClearFilters}
         >
           Clear
         </Button>
