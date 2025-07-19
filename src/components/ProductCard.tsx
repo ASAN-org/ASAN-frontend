@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-} from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import type { Product } from "../types/Product";
 
 type ProductCardProps = {
@@ -12,8 +8,15 @@ type ProductCardProps = {
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
     <Card
+      onClick={handleCardClick}
       sx={{
         height: 240,
         width: 180,
@@ -27,11 +30,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         transition: "all 0.3s ease",
         mt: 1, // Top margin
         mb: 1,
+        cursor: "pointer",
         "&:hover": {
           boxShadow:
             "0 4px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.5)",
-          cursor: "pointer",
-
+          transform: "translateY(-2px)",
         },
       }}
     >
@@ -51,7 +54,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           src={product.imageUrl}
           alt={product.name}
           style={{
-
             objectFit: "contain",
           }}
         />

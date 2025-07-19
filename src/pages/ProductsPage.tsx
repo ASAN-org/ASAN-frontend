@@ -5,8 +5,10 @@ import {
   Pagination,
   Stack,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Filter from "./../components/Filter";
 import SortDropdown from "./../components/SortDropdown";
+import LoadingSpinner from "./../components/LoadingSpinner";
 import { mockProducts } from "../types/mockProducts";
 import { useTheme } from "@mui/material/styles";
 import { useState, useMemo } from "react";
@@ -28,16 +30,13 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSort, setCurrentSort] = useState(defaultSort);
-
-  // Debug: Log the category and subCategory values
-  console.log("ProductsPage received:", {
-    category,
-    subCategory,
-    itemsPerPage,
-    defaultSort,
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<{
+    [key: string]: number[] | string[] | boolean;
+  }>({});
 
   // Find related products for the current category/subCategory
   const allRelatedProducts = mockProducts.filter(
@@ -48,9 +47,107 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
         : true)
   );
 
+  // Apply filters to products
+  const filteredProducts = useMemo(() => {
+    let products = [...allRelatedProducts];
+
+    // Apply each filter
+    Object.entries(appliedFilters).forEach(([filterName, filterValue]) => {
+      if (
+        filterValue === undefined ||
+        (Array.isArray(filterValue) && filterValue.length === 0) ||
+        filterValue === false
+      ) {
+        return; // Skip empty or false filters
+      }
+
+      products = products.filter((product) => {
+        // Handle range filters (price, etc.)
+        if (Array.isArray(filterValue) && filterValue.length === 2) {
+          const [min, max] = filterValue as number[];
+          // Map filter names to product fields
+          let productValue = 0;
+          if (filterName.toLowerCase().includes("price")) {
+            productValue = product.price || 0;
+          } else if (filterName.toLowerCase().includes("weight")) {
+            productValue = parseInt(product.weight?.replace("g", "") || "0");
+          }
+          return productValue >= min && productValue <= max;
+        }
+
+        // Handle checklist filters (brand, color, etc.)
+        if (Array.isArray(filterValue) && filterValue.length > 0) {
+          const filterValues = filterValue as string[];
+
+          // Map filter names to product fields
+          let productValue: unknown = undefined;
+          if (filterName.toLowerCase().includes("color")) {
+            productValue = product.color;
+          } else if (filterName.toLowerCase().includes("brand")) {
+            productValue = product.brand;
+          } else if (filterName.toLowerCase().includes("material")) {
+            productValue = product.material;
+          } else if (
+            filterName.toLowerCase().includes("memory") ||
+            filterName.toLowerCase().includes("storage")
+          ) {
+            // Check specifications for memory/storage
+            productValue = product.specifications?.["Internal Memory"];
+          } else if (filterName.toLowerCase().includes("5g")) {
+            // Check specifications for 5G support
+            productValue = product.specifications?.["Supports 5G"];
+          } else if (filterName.toLowerCase().includes("processor")) {
+            // Check specifications for processor
+            productValue = product.specifications?.Processor;
+          } else if (filterName.toLowerCase().includes("connection")) {
+            // Check specifications for connection type
+            productValue = product.specifications?.["Connection Type"];
+          } else {
+            // Try direct field access
+            productValue = product[filterName as keyof typeof product];
+          }
+
+          if (typeof productValue === "string") {
+            return filterValues.includes(productValue);
+          }
+          // Handle array properties like tags or features
+          if (Array.isArray(productValue)) {
+            return filterValues.some((value) => productValue.includes(value));
+          }
+          // Handle boolean features
+          if (typeof productValue === "boolean") {
+            return filterValues.includes(productValue ? "Yes" : "No");
+          }
+          // Handle string boolean values (Yes/No)
+          if (
+            typeof productValue === "string" &&
+            (productValue === "Yes" || productValue === "No")
+          ) {
+            return filterValues.includes(productValue);
+          }
+        }
+
+        // Handle boolean filters
+        if (typeof filterValue === "boolean") {
+          let productValue: unknown = undefined;
+          if (filterName.toLowerCase().includes("5g")) {
+            productValue = product.specifications?.["Supports 5G"] === "Yes";
+          } else {
+            productValue = product[filterName as keyof typeof product];
+          }
+          return Boolean(productValue) === filterValue;
+        }
+
+        return true;
+      });
+    });
+
+    return products;
+  }, [allRelatedProducts, appliedFilters]);
+
   // Sort products based on current sort option
   const sortedProducts = useMemo(() => {
-    const products = [...allRelatedProducts];
+    const products = [...filteredProducts];
 
     switch (currentSort) {
       case "price_asc":
@@ -78,8 +175,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
   const endIndex = startIndex + itemsPerPage;
   const relatedProducts = sortedProducts.slice(startIndex, endIndex);
 
-  console.log("Found related products:", allRelatedProducts.length);
-
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     page: number
@@ -90,12 +185,38 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
   };
 
   const handleSortChange = (sortKey: string) => {
+    setIsLoading(true);
     setCurrentSort(sortKey);
     setCurrentPage(1); // Reset to first page when sorting changes
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
+  };
+
+  const handleApplyFilters = (filters: {
+    [key: string]: number[] | string[] | boolean;
+  }) => {
+    setIsLoading(true);
+    setAppliedFilters(filters);
+    setCurrentPage(1); // Reset to first page when filters change
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
+  };
+
+  const handleClearFilters = () => {
+    setIsLoading(true);
+    setAppliedFilters({});
+    setCurrentPage(1); // Reset to first page when filters change
+    // Simulate loading time for better UX
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   return (
-    <Box display={isMobile ? "block" : "flex"} gap={4} p={2}>
+    <Box
+      display={isMobile ? "block" : "flex"}
+      gap={4}
+      p={2}
+      sx={{ overflow: "hidden" }}
+    >
       <Box flexShrink={0}>
         <Filter
           category={category}
@@ -103,9 +224,12 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
           sortOptions={sortOptions}
           currentSort={currentSort}
           onSortChange={handleSortChange}
+          onApplyFilters={handleApplyFilters}
+          onClearFilters={handleClearFilters}
+          appliedFilters={appliedFilters}
         />
       </Box>
-      <Box flex={1}>
+      <Box flex={1} sx={{ overflow: "hidden" }}>
         {/* Desktop: Sort dropdown in header */}
         {!isMobile && (
           <Box
@@ -116,13 +240,14 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
             gap={2}
           >
             <Typography variant="h5" fontWeight={600}>
-              Related Products ({allRelatedProducts.length})
+              Related Products ({filteredProducts.length})
             </Typography>
 
             <SortDropdown
               sortOptions={sortOptions}
               currentSort={currentSort}
               onSortChange={handleSortChange}
+              isLoading={isLoading}
             />
           </Box>
         )}
@@ -130,11 +255,22 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
         {/* Mobile: Title only */}
         {isMobile && (
           <Typography variant="h5" mb={3} mt={2} fontWeight={600}>
-            Related Products ({allRelatedProducts.length})
+            Related Products ({filteredProducts.length})
           </Typography>
         )}
 
-        {relatedProducts.length > 0 ? (
+        {isLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "400px",
+            }}
+          >
+            <LoadingSpinner message="Loading products..." />
+          </Box>
+        ) : relatedProducts.length > 0 ? (
           <>
             <Box
               display="grid"
@@ -150,6 +286,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
               {relatedProducts.map((product) => (
                 <Box
                   key={product.id}
+                  onClick={() => navigate(`/product/${product.id}`)}
                   sx={{
                     background: "#ffffff",
                     borderRadius: "12px",
@@ -285,6 +422,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                   size={isMobile ? "small" : "medium"}
                   showFirstButton
                   showLastButton
+                  disabled={isLoading}
                   sx={{
                     "& .MuiPaginationItem-root": {
                       borderRadius: "8px",

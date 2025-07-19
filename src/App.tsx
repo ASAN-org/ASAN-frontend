@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Box } from "@mui/material";
 import Header from "./components/Header";
 import Homepage from "./pages/Homepage";
 import ProductsPage from "./pages/ProductsPage";
+import ProductDetail from "./pages/ProductDetail";
+import SearchResults from "./pages/SearchResults";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
 
@@ -45,7 +49,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner message="Loading application..." fullScreen />;
   }
 
   if (!webShopData) {
@@ -59,8 +63,8 @@ function App() {
       key={category.name}
       path={`/${formatUrlSegment(normalizeCategoryName(category.name))}`}
       element={
-        <ProductsPage 
-          category={normalizeCategoryName(category.name)} 
+        <ProductsPage
+          category={normalizeCategoryName(category.name)}
           itemsPerPage={webShopData.products_page.items_per_row}
           sortOptions={webShopData.products_page.sort_options}
           defaultSort={webShopData.products_page.default_sort_option}
@@ -90,11 +94,15 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          {dynamicRoutes}
-        </Routes>
+        <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/product/:productId" element={<ProductDetail />} />
+            <Route path="/search" element={<SearchResults />} />
+            {dynamicRoutes}
+          </Routes>
+        </Box>
       </Router>
     </QueryClientProvider>
   );

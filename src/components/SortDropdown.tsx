@@ -16,6 +16,7 @@ import { useTheme } from "@mui/material/styles";
 import SortIcon from "@mui/icons-material/Sort";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface SortOption {
   key: string;
@@ -27,12 +28,14 @@ interface SortDropdownProps {
   sortOptions: SortOption[];
   currentSort: string;
   onSortChange: (sortKey: string) => void;
+  isLoading?: boolean;
 }
 
 const SortDropdown: React.FC<SortDropdownProps> = ({
   sortOptions,
   currentSort,
   onSortChange,
+  isLoading = false,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -42,6 +45,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
     sortOptions.find((option) => option.key === currentSort) || sortOptions[0];
 
   const handleSortChange = (sortKey: string) => {
+    if (isLoading) return; // Prevent sorting while loading
     onSortChange(sortKey);
     setOpen(false);
   };
@@ -56,7 +60,8 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         <Button
           variant="outlined"
           onClick={handleOpen}
-          startIcon={<SortIcon />}
+          disabled={isLoading}
+          startIcon={isLoading ? <LoadingSpinner size="small" /> : <SortIcon />}
           endIcon={<KeyboardArrowDownIcon />}
           sx={{
             borderColor: "#e0e0e0",
@@ -67,7 +72,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
             py: 1,
           }}
         >
-          Sort: {currentSortOption.label}
+          {isLoading ? "Sorting..." : `Sort: ${currentSortOption.label}`}
         </Button>
 
         {open && (
@@ -184,7 +189,8 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
       <Button
         variant="outlined"
         onClick={handleOpen}
-        startIcon={<SortIcon />}
+        disabled={isLoading}
+        startIcon={isLoading ? <LoadingSpinner size="small" /> : <SortIcon />}
         endIcon={<KeyboardArrowDownIcon />}
         sx={{
           borderColor: "#e0e0e0",
@@ -196,7 +202,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
           minWidth: 200,
         }}
       >
-        Sort: {currentSortOption.label}
+        {isLoading ? "Sorting..." : `Sort: ${currentSortOption.label}`}
       </Button>
 
       {open && (
