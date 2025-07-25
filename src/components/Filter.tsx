@@ -165,7 +165,7 @@ const Filter: React.FC<FilterProps> = ({
         {open && (
           <Paper
             elevation={4}
-            sx={{
+            sx={theme => ({
               position: "fixed",
               top: 0,
               left: 0,
@@ -175,13 +175,14 @@ const Filter: React.FC<FilterProps> = ({
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
-            }}
+              backgroundColor: theme.palette.background.default,
+            })}
           >
             <Box
               display="flex"
               justifyContent="flex-end"
               p={2}
-              sx={{ borderBottom: "1px solid #f0f0f0" }}
+              sx={theme => ({ borderBottom: `1px solid ${theme.palette.divider}` })}
             >
               <IconButton onClick={() => setOpen(false)}>
                 <CloseIcon />
@@ -229,7 +230,7 @@ const Filter: React.FC<FilterProps> = ({
                                   )
                                 );
                               }}
-                              sx={{ justifyContent: "flex-start" }}
+                              sx={theme => ({ justifyContent: "flex-start", color: theme.palette.text.primary })}
                             >
                               {subCat}
                             </Button>
@@ -240,7 +241,7 @@ const Filter: React.FC<FilterProps> = ({
                       )}
                     </AccordionDetails>
                   </Accordion>
-                  <Divider sx={{ color: "#f0f0f0", margin: "0.5rem" }} />
+                  <Divider sx={theme => ({ color: theme.palette.divider, margin: "0.5rem" })} />
                 </Box>
               )}
 
@@ -258,14 +259,14 @@ const Filter: React.FC<FilterProps> = ({
                 mt={3}
                 display="flex"
                 gap={2}
-                sx={{
+                sx={theme => ({
                   position: "sticky",
                   bottom: 0,
-                  backgroundColor: "background.paper",
+                  backgroundColor: theme.palette.background.paper,
                   pt: 2,
                   pb: 2,
-                  borderTop: "1px solid #f0f0f0",
-                }}
+                  borderTop: `1px solid ${theme.palette.divider}`,
+                })}
               >
                 <Button
                   variant="contained"
@@ -280,6 +281,7 @@ const Filter: React.FC<FilterProps> = ({
                   color="secondary"
                   //fullWidth
                   onClick={handleClearFilters}
+                  sx={theme => ({ borderColor: theme.palette.divider })}
                 >
                   Clear
                 </Button>
@@ -297,7 +299,7 @@ const Filter: React.FC<FilterProps> = ({
       width={"15rem"}
       padding={"1rem"}
       borderRadius={"0.2rem"}
-      sx={{ border: "solid #f0f0f0 1px" }}
+      sx={theme => ({ border: `solid ${theme.palette.divider} 1px`, backgroundColor: theme.palette.background.paper })}
     >
       {!subCategory && (
         <Box>
@@ -320,7 +322,7 @@ const Filter: React.FC<FilterProps> = ({
                           createSubcategoryUrl(originalCategoryName, subCat)
                         )
                       }
-                      sx={{ justifyContent: "flex-start" }}
+                      sx={theme => ({ justifyContent: "flex-start", color: theme.palette.text.primary })}
                     >
                       {subCat}
                     </Button>
@@ -331,7 +333,7 @@ const Filter: React.FC<FilterProps> = ({
               )}
             </AccordionDetails>
           </Accordion>
-          <Divider sx={{ color: "#f0f0f0", margin: "0.5rem" }} />
+          <Divider sx={theme => ({ color: theme.palette.divider, margin: "0.5rem" })} />
         </Box>
       )}
 

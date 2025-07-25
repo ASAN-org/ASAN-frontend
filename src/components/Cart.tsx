@@ -1,4 +1,4 @@
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -10,10 +10,14 @@ const CartBadge = styled(Badge)`
   }
 `;
 
-export default function IconButtonWithBadge() {
+export default function IconButtonWithBadge({ color }: { color?: string }) {
+  const theme = useTheme();
   return (
     <IconButton sx={{ marginRight: "10px" }}>
-      <ShoppingCartIcon fontSize="small" />
+      <ShoppingCartIcon
+        fontSize="small"
+        style={{ color: color || theme.palette.text.primary }}
+      />
       <CartBadge badgeContent={2} color="primary" overlap="circular" />
     </IconButton>
   );

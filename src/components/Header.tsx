@@ -36,7 +36,12 @@ export default function Header() {
       <Box
         display="flex"
         width="100%"
-        sx={{ backgroundColor: "#f0f0f0", position: "relative", zIndex: 1 }}
+        sx={(theme) => ({
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+          position: "relative",
+          zIndex: 1,
+        })}
         flexDirection="column"
         marginBottom={isMobile ? 1 : 3}
       >
@@ -122,12 +127,13 @@ export default function Header() {
                 <Typography
                   fontWeight={"bold"}
                   fontSize={"1.5rem"}
-                  sx={{
+                  sx={(theme) => ({
                     ml: 1,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
-                  }}
+                    color: theme.palette.text.primary,
+                  })}
                 >
                   {siteTitle}
                 </Typography>

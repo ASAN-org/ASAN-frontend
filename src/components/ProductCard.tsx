@@ -17,11 +17,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card
       onClick={handleCardClick}
-      sx={{
+      sx={(theme) => ({
         height: 240,
         width: 180,
-        background: "linear-gradient(to bottom, #cbd5e1, #e2e8f0)", // light gray/blue gradient
-        color: "#0f172a", // dark text for readability
+        background: theme.palette.background.paper,
+        color: theme.palette.text.primary,
         borderRadius: 3,
         display: "flex",
         flexDirection: "column",
@@ -31,24 +31,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         mt: 1, // Top margin
         mb: 1,
         cursor: "pointer",
+        boxShadow: theme.shadows[1],
         "&:hover": {
-          boxShadow:
-            "0 4px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.5)",
+          boxShadow: theme.shadows[6],
           transform: "translateY(-2px)",
         },
-      }}
+      })}
     >
       {/* Image Section */}
       <Box
-        sx={{
+        sx={(theme) => ({
           height: 120,
           width: "100%",
-          backgroundColor: "#f1f5f9",
+          backgroundColor: theme.palette.background.default,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
-        }}
+        })}
       >
         <img
           src={product.imageUrl}
@@ -58,7 +58,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           }}
         />
       </Box>
-
       {/* Info Section */}
       <CardContent
         sx={{
@@ -88,16 +87,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{
-              color: "#334155",
+            sx={(theme) => ({
+              color: theme.palette.text.secondary,
               fontFamily: "'Anjoman-FaNum-Medium'",
               fontSize: "0.85rem",
-            }}
+            })}
           >
             {product.brand}
           </Typography>
         </Box>
-
         <Typography
           sx={{
             fontFamily: "'Anjoman-FaNum-Bold'",

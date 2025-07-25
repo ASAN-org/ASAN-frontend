@@ -107,19 +107,22 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
         <IconButton
           onClick={goToPrevious}
           disabled={isFirstSlide}
-          sx={{
+          sx={(theme) => ({
             position: "absolute",
             left: 8,
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            color: "white",
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(255,255,255,0.08)"
+                : "rgba(0,0,0,0.08)",
+            color: theme.palette.text.primary,
             width: 40,
             height: 40,
-            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+            "&:hover": { backgroundColor: theme.palette.action.hover },
             "&:disabled": { opacity: 0.3 },
-          }}
+          })}
         >
           <NavigateBeforeIcon />
         </IconButton>
@@ -161,19 +164,22 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
         <IconButton
           onClick={goToNext}
           disabled={isLastSlide}
-          sx={{
+          sx={(theme) => ({
             position: "absolute",
             right: 8,
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 2,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            color: "white",
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(255,255,255,0.08)"
+                : "rgba(0,0,0,0.08)",
+            color: theme.palette.text.primary,
             width: 40,
             height: 40,
-            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+            "&:hover": { backgroundColor: theme.palette.action.hover },
             "&:disabled": { opacity: 0.3 },
-          }}
+          })}
         >
           <NavigateNextIcon />
         </IconButton>

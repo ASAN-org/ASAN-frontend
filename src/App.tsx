@@ -9,6 +9,8 @@ import SearchResults from "./pages/SearchResults";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { getTheme } from "./utils/theme";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,7 @@ interface WebShopData {
       order: number;
     }>;
   };
+  theme: "dark" | "light";
 }
 
 function App() {
@@ -91,20 +94,27 @@ function App() {
     )),
   ]);
 
+  // Get theme mode from backend data (default to 'light')
+  const themeMode = (webShopData.theme === 'dark' ? 'dark' : 'light') as 'light' | 'dark';
+  const theme = getTheme(themeMode);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/product/:productId" element={<ProductDetail />} />
-            <Route path="/search" element={<SearchResults />} />
-            {dynamicRoutes}
-          </Routes>
-        </Box>
-      </Router>
-    </QueryClientProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/product/:productId" element={<ProductDetail />} />
+              <Route path="/search" element={<SearchResults />} />
+              {dynamicRoutes}
+            </Routes>
+          </Box>
+        </Router>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

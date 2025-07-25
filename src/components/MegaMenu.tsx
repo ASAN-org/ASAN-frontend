@@ -138,14 +138,14 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
   );
 
   const DesktopMenu = (
-    <Box 
-      display="flex" 
-      justifyContent="center" 
+    <Box
+      display="flex"
+      justifyContent="center"
       onMouseLeave={handleMouseLeave}
-      sx={{ 
+      sx={{
         overflow: "hidden",
         flexWrap: "wrap",
-        gap: 1
+        gap: 1,
       }}
     >
       {categories.map((category) => (
@@ -153,16 +153,16 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
           <Button
             onMouseEnter={(e) => handleMouseEnter(e, category.name)}
             onClick={() => handleNavigate(category.name)}
-            sx={{
+            sx={(theme) => ({
               color: "white",
               textTransform: "none",
               px: 2,
               minWidth: "auto",
               fontSize: "0.9rem",
               "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                backgroundColor: theme.palette.action.hover,
               },
-            }}
+            })}
           >
             {category.name}
           </Button>
@@ -173,13 +173,14 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
             sx={{ zIndex: 1300 }}
           >
             <Paper
-              sx={{
+              sx={(theme) => ({
                 p: 2,
                 mt: 0.5,
                 minWidth: 200,
-                backgroundColor: "white",
+                backgroundColor: theme.palette.background.paper,
+                color: theme.palette.text.primary,
                 boxShadow: 3,
-              }}
+              })}
               onMouseEnter={() => setOpenCategory(category.name)}
               onMouseLeave={handleMouseLeave}
             >
@@ -188,13 +189,14 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
                   <Typography
                     onClick={() => handleNavigate(category.name, subCategory)}
                     key={subCategory}
-                    sx={{
+                    sx={(theme) => ({
                       p: 1,
                       cursor: "pointer",
+                      color: theme.palette.text.primary,
                       "&:hover": {
-                        backgroundColor: "#f5f5f5",
+                        backgroundColor: theme.palette.action.hover,
                       },
-                    }}
+                    })}
                   >
                     {subCategory}
                   </Typography>
