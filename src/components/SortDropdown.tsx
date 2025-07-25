@@ -63,14 +63,18 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
           disabled={isLoading}
           startIcon={isLoading ? <LoadingSpinner size="small" /> : <SortIcon />}
           endIcon={<KeyboardArrowDownIcon />}
-          sx={{
-            borderColor: "#e0e0e0",
-            color: "#333",
+          sx={(theme) => ({
+            borderColor: theme.palette.divider,
+            color: theme.palette.text.primary,
+            backgroundColor: theme.palette.background.paper,
             textTransform: "none",
             borderRadius: "8px",
             px: 2,
             py: 1,
-          }}
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover,
+            },
+          })}
         >
           {isLoading ? "Sorting..." : `Sort: ${currentSortOption.label}`}
         </Button>
@@ -78,7 +82,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         {open && (
           <Paper
             elevation={4}
-            sx={{
+            sx={(theme) => ({
               position: "fixed",
               top: 0,
               left: 0,
@@ -88,16 +92,24 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
-            }}
+              backgroundColor: theme.palette.background.paper,
+              color: theme.palette.text.primary,
+            })}
           >
             <Box
               display="flex"
               justifyContent="space-between"
               alignItems="center"
               p={2}
-              sx={{ borderBottom: "1px solid #f0f0f0" }}
+              sx={(theme) => ({
+                borderBottom: `1px solid ${theme.palette.divider}`,
+              })}
             >
-              <Typography variant="h6" fontWeight={600}>
+              <Typography
+                variant="h6"
+                fontWeight={600}
+                sx={(theme) => ({ color: theme.palette.text.primary })}
+              >
                 Sort Products
               </Typography>
               <IconButton onClick={() => setOpen(false)}>
@@ -192,15 +204,19 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         disabled={isLoading}
         startIcon={isLoading ? <LoadingSpinner size="small" /> : <SortIcon />}
         endIcon={<KeyboardArrowDownIcon />}
-        sx={{
-          borderColor: "#e0e0e0",
-          color: "#333",
+        sx={(theme) => ({
+          borderColor: theme.palette.divider,
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.background.paper,
           textTransform: "none",
           borderRadius: "8px",
           px: 2,
           py: 1,
           minWidth: 200,
-        }}
+          "&:hover": {
+            backgroundColor: theme.palette.action.hover,
+          },
+        })}
       >
         {isLoading ? "Sorting..." : `Sort: ${currentSortOption.label}`}
       </Button>

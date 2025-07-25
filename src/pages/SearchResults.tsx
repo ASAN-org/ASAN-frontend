@@ -161,7 +161,7 @@ const SearchResults: React.FC = () => {
             sx={{
               fontFamily: "'Anjoman-FaNum-Bold'",
               mb: 3,
-              color: "#1e293b",
+              color: theme.palette.text.primary,
             }}
           >
             Filters
@@ -289,7 +289,14 @@ const SearchResults: React.FC = () => {
 
         {/* Products Grid */}
         {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "400px",
+            }}
+          >
             <LoadingSpinner message="Loading search results..." />
           </Box>
         ) : paginatedResults.length > 0 ? (
@@ -309,31 +316,31 @@ const SearchResults: React.FC = () => {
                 <Box
                   key={product.id}
                   onClick={() => navigate(`/product/${product.id}`)}
-                  sx={{
-                    background: "#ffffff",
+                  sx={(theme) => ({
+                    background: theme.palette.background.paper,
                     borderRadius: "12px",
-                    border: "1px solid #e0e0e0",
+                    border: `1px solid ${theme.palette.divider}`,
                     overflow: "hidden",
                     transition: "all 0.3s ease",
                     cursor: "pointer",
                     "&:hover": {
                       transform: "translateY(-4px)",
-                      boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-                      borderColor: "#2196f3",
+                      boxShadow: theme.shadows[6],
+                      borderColor: theme.palette.primary.main,
                     },
                     position: "relative",
-                  }}
+                  })}
                 >
                   {/* Product Image */}
                   <Box
-                    sx={{
+                    sx={(theme) => ({
                       position: "relative",
                       paddingTop: "100%", // 1:1 aspect ratio
-                      backgroundColor: "#f8f9fa",
+                      backgroundColor: theme.palette.background.default,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                    }}
+                    })}
                   >
                     <img
                       src={product.imageUrl}
@@ -351,24 +358,25 @@ const SearchResults: React.FC = () => {
                     />
                     {product.discount && (
                       <Box
-                        sx={{
+                        sx={(theme) => ({
                           position: "absolute",
                           top: "8px",
                           right: "8px",
-                          backgroundColor: "#ff4444",
-                          color: "white",
+                          backgroundColor: theme.palette.error.main,
+                          color: theme.palette.getContrastText(
+                            theme.palette.error.main
+                          ),
                           borderRadius: "12px",
                           px: 1,
                           py: 0.5,
                           fontSize: "0.75rem",
                           fontWeight: "bold",
-                        }}
+                        })}
                       >
                         -{product.discount}%
                       </Box>
                     )}
                   </Box>
-
                   {/* Product Info */}
                   <Box p={2}>
                     <Typography
@@ -387,7 +395,6 @@ const SearchResults: React.FC = () => {
                     >
                       {product.name}
                     </Typography>
-
                     <Typography
                       variant="caption"
                       color="text.secondary"
@@ -399,7 +406,6 @@ const SearchResults: React.FC = () => {
                     >
                       {product.brand}
                     </Typography>
-
                     <Box
                       display="flex"
                       alignItems="center"
@@ -413,17 +419,16 @@ const SearchResults: React.FC = () => {
                       >
                         Rp {product.price?.toLocaleString()}
                       </Typography>
-
                       <Box
-                        sx={{
-                          backgroundColor: "#f0f8ff",
-                          color: "#1976d2",
+                        sx={(theme) => ({
+                          backgroundColor: theme.palette.action.selected,
+                          color: theme.palette.primary.main,
                           px: 1,
                           py: 0.5,
                           borderRadius: "4px",
                           fontSize: "0.75rem",
                           fontWeight: "500",
-                        }}
+                        })}
                       >
                         View
                       </Box>
@@ -460,14 +465,17 @@ const SearchResults: React.FC = () => {
           </>
         ) : (
           <Box
-            sx={{
+            sx={(theme) => ({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
               minHeight: "400px",
               textAlign: "center",
-            }}
+              backgroundColor: theme.palette.background.default,
+              borderRadius: "12px",
+              border: `2px dashed ${theme.palette.divider}`,
+            })}
           >
             <Typography variant="h5" color="text.secondary" sx={{ mb: 2 }}>
               No products found

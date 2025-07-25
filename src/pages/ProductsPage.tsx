@@ -287,31 +287,31 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                 <Box
                   key={product.id}
                   onClick={() => navigate(`/product/${product.id}`)}
-                  sx={{
-                    background: "#ffffff",
+                  sx={(theme) => ({
+                    background: theme.palette.background.paper,
                     borderRadius: "12px",
-                    border: "1px solid #e0e0e0",
+                    border: `1px solid ${theme.palette.divider}`,
                     overflow: "hidden",
                     transition: "all 0.3s ease",
                     cursor: "pointer",
                     "&:hover": {
                       transform: "translateY(-4px)",
-                      boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-                      borderColor: "#2196f3",
+                      boxShadow: theme.shadows[6],
+                      borderColor: theme.palette.primary.main,
                     },
                     position: "relative",
-                  }}
+                  })}
                 >
                   {/* Product Image */}
                   <Box
-                    sx={{
+                    sx={(theme) => ({
                       position: "relative",
                       paddingTop: "100%", // 1:1 aspect ratio
-                      backgroundColor: "#f8f9fa",
+                      backgroundColor: theme.palette.background.default,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                    }}
+                    })}
                   >
                     <img
                       src={product.imageUrl}
@@ -329,24 +329,25 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                     />
                     {product.discount && (
                       <Box
-                        sx={{
+                        sx={(theme) => ({
                           position: "absolute",
                           top: "8px",
                           right: "8px",
-                          backgroundColor: "#ff4444",
-                          color: "white",
+                          backgroundColor: theme.palette.error.main,
+                          color: theme.palette.getContrastText(
+                            theme.palette.error.main
+                          ),
                           borderRadius: "12px",
                           px: 1,
                           py: 0.5,
                           fontSize: "0.75rem",
                           fontWeight: "bold",
-                        }}
+                        })}
                       >
                         -{product.discount}%
                       </Box>
                     )}
                   </Box>
-
                   {/* Product Info */}
                   <Box p={2}>
                     <Typography
@@ -365,7 +366,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                     >
                       {product.name}
                     </Typography>
-
                     <Typography
                       variant="caption"
                       color="text.secondary"
@@ -377,7 +377,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                     >
                       {product.brand}
                     </Typography>
-
                     <Box
                       display="flex"
                       alignItems="center"
@@ -391,17 +390,16 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
                       >
                         ${product.price}
                       </Typography>
-
                       <Box
-                        sx={{
-                          backgroundColor: "#f0f8ff",
-                          color: "#1976d2",
+                        sx={(theme) => ({
+                          backgroundColor: theme.palette.action.selected,
+                          color: theme.palette.primary.main,
                           px: 1,
                           py: 0.5,
                           borderRadius: "4px",
                           fontSize: "0.75rem",
                           fontWeight: "500",
-                        }}
+                        })}
                       >
                         View
                       </Box>
@@ -442,11 +440,11 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
             justifyContent="center"
             alignItems="center"
             minHeight="300px"
-            sx={{
-              backgroundColor: "#f8f9fa",
+            sx={(theme) => ({
+              backgroundColor: theme.palette.background.default,
               borderRadius: "12px",
-              border: "2px dashed #e0e0e0",
-            }}
+              border: `2px dashed ${theme.palette.divider}`,
+            })}
           >
             <Typography variant="h6" color="text.secondary">
               No products found for this category

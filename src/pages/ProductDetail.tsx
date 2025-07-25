@@ -343,12 +343,12 @@ const ProductDetail: React.FC = () => {
           <Box>
             <Typography
               variant={isMobile ? "h5" : "h4"}
-              sx={{
+              sx={(theme) => ({
                 fontFamily: "'Anjoman-FaNum-Bold'",
                 mb: 2,
-                color: "#1e293b",
+                color: theme.palette.text.primary,
                 lineHeight: 1.3,
-              }}
+              })}
             >
               {product.name}
             </Typography>
