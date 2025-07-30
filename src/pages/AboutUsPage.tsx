@@ -1,8 +1,61 @@
 import React from 'react';
 import { Container, Typography, Box, Card, Grid } from '@mui/material';
 import { motion } from 'framer-motion';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import SecurityIcon from '@mui/icons-material/Security';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import DevicesIcon from '@mui/icons-material/Devices';
 import { lighten, alpha } from '@mui/material/styles';
 
+
+// Define types for stats
+interface StatItem {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  bgColor: string;
+}
+
+
+// stat bar data
+const stats: StatItem[] = [
+  { icon: <DevicesIcon fontSize="large" sx={{ color: 'white' }} />, label: 'Products Sold', value: "2.5M+", bgColor: '#6a11cb' },
+  { icon: <SupportAgentIcon fontSize="large" sx={{ color: 'white' }} />, label: 'Support Queries', value: "98% resolved", bgColor: '#2575fc' },
+  { icon: <LocalShippingIcon fontSize="large" sx={{ color: 'white' }} />, label: 'On-Time Delivery', value: '99.2%', bgColor: '#fc4a1a' },
+  { icon: <SecurityIcon fontSize="large" sx={{ color: 'white' }} />, label: 'Authentic Products', value: '100%', bgColor: '#fbbd61' },
+];
+
+const StatBar: React.FC = () => (
+  <Grid container spacing={4} justifyContent="center" sx={{ my: 4 }}>
+    {stats.map((stat, index) => (
+      <Grid  key={stat.label}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: index * 0.2 }}
+          viewport={{ once: true }}
+        >
+          <Card sx={{ 
+            textAlign: 'center', 
+            py: 4, 
+            px: 2, 
+            height: '100%',
+            background: `linear-gradient(135deg, ${stat.bgColor} 0%, ${lighten(stat.bgColor, 0.2)} 100%)`,
+            color: 'white',
+            borderRadius: '12px',
+            boxShadow: `0 6px 12px ${alpha(stat.bgColor, 0.3)}`
+          }}>
+            {stat.icon}
+            <Typography variant="h5" fontWeight="bold" mt={2}>
+              {stat.value}
+            </Typography>
+            <Typography sx={{ color: 'rgba(255,255,255,0.9)' }}>{stat.label}</Typography>
+          </Card>
+        </motion.div>
+      </Grid>
+    ))}
+  </Grid>
+);
 
 const AboutUs: React.FC = () => (
   <Box
@@ -121,6 +174,9 @@ const AboutUs: React.FC = () => (
           What truly sets us apart is our commitment to your complete <strong>tech journey</strong>. From the moment you start browsing to years after your purchase, our team is here to provide expert advice, setup assistance, and ongoing support.
         </Typography>
       </motion.div>
+      <Box my={4}>
+        <StatBar />
+      </Box>
     </Container>
   </Box>
 );
