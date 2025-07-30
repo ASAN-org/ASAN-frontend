@@ -10,7 +10,6 @@ import { mockProducts } from "../types/mockProducts";
 import ProductSlider from "../components/ProductSlider";
 import { MiniImageSlider } from "../components/MiniSlider";
 import LoadingSpinner from "../components/LoadingSpinner";
-import AboutUs from "./AboutUsPage";
 
 const IMAGES = [
   { url: p1, alt: "Pic One" },
@@ -43,8 +42,7 @@ function Homepage() {
 
   return (
     <Box sx={{ overflow: "hidden" }}>
-      <AboutUs/>
-      {/* <Box>
+      <Box>
           <ImageSlider images={IMAGES}/>
       </Box>
       <Box sx={{mt: 9, overflow: "hidden"}}>
@@ -53,7 +51,7 @@ function Homepage() {
         <MiniImageSlider images={IMAGES} />
         <ProductSlider products={top12Products} />
         <ProductSlider products={secodn12Products} />
-      </Box> */}
+      </Box>
     </Box>
   );
 }

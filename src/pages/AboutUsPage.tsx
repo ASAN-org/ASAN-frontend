@@ -85,7 +85,7 @@ const AboutUs: React.FC = () => (
     sx={{
       width: '99vw',
       backgroundColor: 'rgba(249,249,255,1)',
-      py: 8,
+      py: 3,
       overflowX: 'hidden',
     }}
   >
@@ -346,7 +346,6 @@ const AboutUs: React.FC = () => (
           ))}
         </Grid>
       </Box>
-
       {/*Commitment Section */}
       <Box my={8} sx={{
         p: 6,

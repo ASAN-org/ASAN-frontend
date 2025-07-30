@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { getTheme } from "./utils/theme";
+import AboutUs from "./pages/AboutUsPage";
 
 const queryClient = new QueryClient();
 
@@ -107,6 +108,7 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Homepage />} />
+              <Route path="/about-us" element={<AboutUs/>}/>
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/search" element={<SearchResults />} />
               {dynamicRoutes}
