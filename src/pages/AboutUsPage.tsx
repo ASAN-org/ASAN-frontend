@@ -135,7 +135,7 @@ const AboutUs: React.FC = () => (
           Where Technology Meets Trust
         </Typography>
         
-        {/* Feature Highlights */}
+        {/* Colorful Feature Highlights */}
         <Grid container spacing={2} sx={{ mb: 4 }}>
           {['Genuine Products', 'Expert Advice', 'Fast Delivery', '24/7 Support'].map((text, index) => (
             <Grid  key={index}>
@@ -345,6 +345,81 @@ const AboutUs: React.FC = () => (
             </Grid>
           ))}
         </Grid>
+      </Box>
+
+      {/*Commitment Section */}
+      <Box my={8} sx={{
+        p: 6,
+        borderRadius: 2,
+        background: 'linear-gradient(135deg, rgba(110,72,170,0.1) 0%, rgba(245,245,255,1) 100%)',
+        borderLeft: '6px solid #6e48aa',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <Typography variant="h3" gutterBottom align="center" sx={{ 
+          fontWeight: 'bold', 
+          mb: 4,
+          background: 'linear-gradient(to right, #6e48aa, #9d50bb)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
+        }}>
+          Our Commitment
+        </Typography>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <Typography   variant="h6" align="center" sx={{ 
+            mb: 4, 
+            color: '#6e48aa',
+            fontWeight: 600
+          }}>
+            The TechNest Difference
+          </Typography>
+          
+          <Typography   sx={{ 
+            fontSize: '1.1rem', 
+            lineHeight: 1.8,
+            '& strong': {
+              background: 'linear-gradient(to right, #4facfe, #00f2fe)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 600
+            }
+          }}>
+            At <strong>TechNest</strong>, we measure our success by your satisfaction. Every product in our catalog meets our rigorous standards for quality and performance, backed by manufacturer warranties and our own comprehensive support.
+          </Typography>
+          
+          <Typography   sx={{ 
+            fontSize: '1.1rem', 
+            lineHeight: 1.8,
+            '& strong': {
+              background: 'linear-gradient(to right, #ff758c, #ff7eb3)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 600
+            }
+          }}>
+            Our team of certified technicians doesn't just sell technology - we <strong>live it</strong>. We're constantly testing new devices, updating our knowledge, and developing services to make your tech experience seamless.
+          </Typography>
+          
+          <Typography   sx={{ 
+            fontSize: '1.1rem', 
+            lineHeight: 1.8, 
+            mb: 4,
+            '& strong': {
+              background: 'linear-gradient(to right, #6e48aa, #9d50bb)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              fontWeight: 600
+            }
+          }}>
+            We invite you to experience the <strong>TechNest way</strong> - where cutting-edge technology meets personalized service, and every customer becomes part of our tech family.
+          </Typography>
+        </motion.div>
       </Box>
     </Container>
   </Box>
