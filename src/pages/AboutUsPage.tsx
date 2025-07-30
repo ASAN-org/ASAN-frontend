@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Typography, Box, Card, Grid, Avatar } from '@mui/material';
 import { motion } from 'framer-motion';
+import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot, TimelineOppositeContent } from '@mui/lab';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -8,6 +9,12 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import DevicesIcon from '@mui/icons-material/Devices';
 import { lighten, alpha } from '@mui/material/styles';
 
+// Define types for timeline items
+interface TimelineItemData {
+  title: string;
+  cardTitle: string;
+  cardSubtitle: string;
+}
 
 // Define types for stats
 interface StatItem {
@@ -24,7 +31,14 @@ interface FeatureCard {
   description: string;
 }
 
-
+// Timeline data
+const timelineItems: TimelineItemData[] = [
+  { title: "2014", cardTitle: "TechNest Founded", cardSubtitle: "Started as a specialized online store for premium tech products" },
+  { title: "2016", cardTitle: "10K Customers", cardSubtitle: "Became a trusted name for authentic tech with verified reviews" },
+  { title: "2018", cardTitle: "Mobile App Launch", cardSubtitle: "Introduced AR preview and real-time stock checking" },
+  { title: "2020", cardTitle: "Nationwide Coverage", cardSubtitle: "Same-day delivery in 15 major cities" },
+  { title: "2023", cardTitle: "Tech Excellence Award", cardSubtitle: "Recognized for innovation in customer experience" },
+];
 
 // stat bar data
 const stats: StatItem[] = [
@@ -121,7 +135,7 @@ const AboutUs: React.FC = () => (
           Where Technology Meets Trust
         </Typography>
         
-        {/*Feature Highlights */}
+        {/* Feature Highlights */}
         <Grid container spacing={2} sx={{ mb: 4 }}>
           {['Genuine Products', 'Expert Advice', 'Fast Delivery', '24/7 Support'].map((text, index) => (
             <Grid  key={index}>
@@ -187,6 +201,70 @@ const AboutUs: React.FC = () => (
       <Box my={4}>
         <StatBar />
       </Box>
+
+      {/*Timeline Section */}
+      <Box my={6}>
+        <Typography variant="h4" gutterBottom align="center" sx={{ 
+          fontWeight: 'bold',
+          background: 'linear-gradient(to right, #6e48aa, #9d50bb)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          display: 'inline-block',
+          mx: 'auto'
+        }}>
+          Our Tech Journey
+        </Typography>
+        <Typography   align="center" sx={{ 
+          mb: 4, 
+          color: '#6e48aa',
+          fontWeight: 500
+        }}>
+          Pioneering excellence in tech retail since 2014
+        </Typography>
+        
+        <Timeline position="alternate" sx={{ 
+          '& .MuiTimelineDot-root': {
+            boxShadow: '0 0 0 4px rgba(110,72,170,0.1)'
+          }
+        }}>
+          {timelineItems.map((item, index) => (
+            <TimelineItem key={index}>
+              <TimelineOppositeContent sx={{ flex: 0.2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  {item.title}
+                </Typography>
+              </TimelineOppositeContent>
+              <TimelineSeparator>
+                <TimelineDot sx={{ 
+                  backgroundColor: ['#4facfe', '#a6c1ee', '#ff758c', '#ff7eb3', '#6e48aa'][index],
+                  width: '16px',
+                  height: '16px'
+                }} />
+                {index !== timelineItems.length - 1 && (
+                  <TimelineConnector sx={{ 
+                    backgroundColor: ['#4facfe', '#a6c1ee', '#ff758c', '#ff7eb3'][index % 4],
+                    width: '2px'
+                  }} />
+                )}
+              </TimelineSeparator>
+              <TimelineContent>
+                <Card sx={{ 
+                  p: 2, 
+                  backgroundColor: `${lighten(['#4facfe', '#a6c1ee', '#ff758c', '#ff7eb3', '#6e48aa'][index], 0.9)}`,
+                  borderLeft: `4px solid ${['#4facfe', '#a6c1ee', '#ff758c', '#ff7eb3', '#6e48aa'][index]}`,
+                  borderRadius: '0 8px 8px 0'
+                }}>
+                  <Typography variant="subtitle1" fontWeight="bold">{item.cardTitle}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.cardSubtitle}
+                  </Typography>
+                </Card>
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+        </Timeline>
+      </Box>
+
       {/* Why Choose Us Section */}
       <Box my={8} sx={{ 
         py: 6, 
