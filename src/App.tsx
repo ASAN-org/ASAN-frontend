@@ -12,6 +12,7 @@ import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { getTheme } from "./utils/theme";
 import AboutUs from "./pages/AboutUsPage";
+import OrderList from "./pages/CartManagementPage";
 
 const queryClient = new QueryClient();
 
@@ -109,6 +110,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Homepage />} />
               <Route path="/about-us" element={<AboutUs/>}/>
+              <Route path="/cart-management" element={<OrderList/>}/>
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/search" element={<SearchResults />} />
               {dynamicRoutes}
