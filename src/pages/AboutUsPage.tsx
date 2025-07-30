@@ -1,6 +1,7 @@
 import React from 'react';
-import { Container, Typography, Box, Card, Grid } from '@mui/material';
+import { Container, Typography, Box, Card, Grid, Avatar } from '@mui/material';
 import { motion } from 'framer-motion';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import SecurityIcon from '@mui/icons-material/Security';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -15,6 +16,14 @@ interface StatItem {
   value: string;
   bgColor: string;
 }
+
+// Define types for feature cards
+interface FeatureCard {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
 
 
 // stat bar data
@@ -174,8 +183,90 @@ const AboutUs: React.FC = () => (
           What truly sets us apart is our commitment to your complete <strong>tech journey</strong>. From the moment you start browsing to years after your purchase, our team is here to provide expert advice, setup assistance, and ongoing support.
         </Typography>
       </motion.div>
+
       <Box my={4}>
         <StatBar />
+      </Box>
+      {/* Why Choose Us Section */}
+      <Box my={8} sx={{ 
+        py: 6, 
+        px: 4, 
+        borderRadius: 2,
+        background: 'linear-gradient(135deg, rgba(249,249,255,1) 0%, rgba(245,245,255,1) 100%)',
+        boxShadow: '0 8px 24px rgba(110,72,170,0.1)'
+      }}>
+        <Typography variant="h4" gutterBottom align="center" sx={{ 
+          fontWeight: 'bold',
+          background: 'linear-gradient(to right, #fc4a1a, #fbbd61)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
+        }}>
+          Why TechNest Stands Out
+        </Typography>
+        <Typography   align="center" sx={{ 
+          mb: 6, 
+          color: '#6e48aa',
+          fontWeight: 500
+        }}>
+          Four pillars of our unmatched service
+        </Typography>
+        
+        <Grid container spacing={4}>
+          {[
+            { 
+              icon: <CheckCircleIcon sx={{ fontSize: 40, color: '#4facfe' }} />,
+              title: "Hassle-Free Returns", 
+              description: "30-day no-questions-asked return policy with free pickup for all products." 
+            },
+            { 
+              icon: <DevicesIcon sx={{ fontSize: 40, color: '#a6c1ee' }} />,
+              title: "Hands-On Experience", 
+              description: "Try before you buy at our experience centers in 12 cities nationwide." 
+            },
+            { 
+              icon: <Avatar src="/images/trade-in.png" sx={{ width: 40, height: 40 }} />,
+              title: "Smart Trade-In Program", 
+              description: "Get instant value for your old devices when upgrading to new tech." 
+            },
+            { 
+              icon: <Avatar src="/images/warranty.png" sx={{ width: 40, height: 40 }} />,
+              title: "Extended Protection", 
+              description: "Optional extended warranties covering accidental damage and battery replacement." 
+            }
+          ].map((item: FeatureCard, index) => (
+            <Grid key={item.title}>
+              <motion.div
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Card sx={{ 
+                  height: '100%', 
+                  p: 3,
+                  textAlign: 'center',
+                  borderTop: `4px solid ${['#4facfe', '#a6c1ee', '#ff758c', '#ff7eb3'][index]}`,
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                  '&:hover': {
+                    boxShadow: `0 8px 24px ${alpha(['#4facfe', '#a6c1ee', '#ff758c', '#ff7eb3'][index], 0.2)}`
+                  }
+                }}>
+                  <Box sx={{ 
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mb: 2
+                  }}>
+                    {item.icon}
+                  </Box>
+                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                    {item.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.description}
+                  </Typography>
+                </Card>
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     </Container>
   </Box>
