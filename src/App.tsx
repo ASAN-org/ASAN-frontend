@@ -13,6 +13,8 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { getTheme } from "./utils/theme";
 import AboutUs from "./pages/AboutUsPage";
 import OrderList from "./pages/CartManagementPage";
+import Footer from "./components/Footer";
+
 
 const queryClient = new QueryClient();
 
@@ -115,6 +117,7 @@ function App() {
               <Route path="/search" element={<SearchResults />} />
               {dynamicRoutes}
             </Routes>
+            <Footer/>
           </Box>
         </Router>
       </QueryClientProvider>
