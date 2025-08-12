@@ -55,7 +55,7 @@ const Footer: React.FC = () => {
           <Grid >
             <Box sx={{ mb: 4 }}>
               <Typography variant="h5" color="text.primary" gutterBottom>
-                Your Brand
+              TechNest
               </Typography>
               <Typography variant="body1" sx={{ mb: 3, maxWidth: 400 }}>
                 A simple, clean solution for your needs. Get started today!
@@ -108,7 +108,7 @@ const Footer: React.FC = () => {
                   <Typography variant="body1">
                     <Link href="mailto:contact@yourbrand.com" color="inherit" underline="hover">
                       <EmailIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                      contact@yourbrand.com
+                      contact@TechNest.com
                     </Link>
                   </Typography>
                 </Stack>
@@ -164,7 +164,7 @@ const Footer: React.FC = () => {
           gap: isMobile ? 2 : 0
         }}>
           <Typography variant="body2">
-            © {new Date().getFullYear()} Your Brand. All rights reserved.
+            © {new Date().getFullYear()} TechNest. All rights reserved.
           </Typography>
         </Box>
       </Container>
