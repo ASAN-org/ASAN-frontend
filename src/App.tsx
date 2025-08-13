@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Homepage from "./pages/Homepage";
+import FAQ from "./pages/FAQ";
 import ProductsPage from "./pages/ProductsPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
@@ -53,14 +54,15 @@ function App() {
   }
 
   // Generate dynamic routes based on fetched data
+  
   const dynamicRoutes = webShopData.categories.flatMap((category) => [
     // Category main page
     <Route
       key={category.name}
       path={`/${formatUrlSegment(normalizeCategoryName(category.name))}`}
       element={
-        <ProductsPage 
-          category={normalizeCategoryName(category.name)} 
+        <ProductsPage
+          category={normalizeCategoryName(category.name)}
           itemsPerPage={webShopData.products_page.items_per_row}
           sortOptions={webShopData.products_page.sort_options}
           defaultSort={webShopData.products_page.default_sort_option}
@@ -93,6 +95,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Homepage />} />
+          <Route path="/faq" element={<FAQ />} /> {}
           {dynamicRoutes}
         </Routes>
       </Router>
