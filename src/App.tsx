@@ -117,6 +117,7 @@ function App() {
               <Route path="/cart-management" element={<OrderList/>}/>
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/search" element={<SearchResults />} />
+              <Route path="/faq" element={<FAQ />} />
               {dynamicRoutes}
             </Routes>
             <Footer/>
