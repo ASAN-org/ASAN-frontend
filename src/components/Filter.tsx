@@ -20,6 +20,7 @@ import { createSubcategoryUrl } from "../utils/urlUtils";
 import { useCategoryData } from "../hooks/useCategoryData";
 import DynamicFilter from "./DynamicFilter";
 import SortDropdown from "./SortDropdown";
+import LoadingSpinner from "./LoadingSpinner";
 
 type FilterProps = {
   category: string;
@@ -27,6 +28,9 @@ type FilterProps = {
   sortOptions?: Array<{ key: string; label: string; order: number }>;
   currentSort?: string;
   onSortChange?: (sortKey: string) => void;
+  onApplyFilters?: (filters: { [key: string]: number[] | string[] | boolean }) => void;
+  onClearFilters?: () => void;
+  appliedFilters?: { [key: string]: number[] | string[] | boolean };
 };
 
 const Filter: React.FC<FilterProps> = ({ 
@@ -34,7 +38,10 @@ const Filter: React.FC<FilterProps> = ({
   subCategory, 
   sortOptions = [],
   currentSort = "popular",
-  onSortChange = () => {}
+  onSortChange = () => {},
+  onApplyFilters = () => {},
+  onClearFilters = () => {},
+  appliedFilters = {}
 }) => {
   const { findCategoryByName, getFiltersForCategory, loading } =
     useCategoryData();
@@ -71,18 +78,25 @@ const Filter: React.FC<FilterProps> = ({
 
     currentCategoryRef.current = categoryKey;
 
+    // Use applied filters if available, otherwise initialize with defaults
     const initialStates: { [key: string]: number[] | string[] | boolean } = {};
     categoryFilters.forEach((filter) => {
-      if (filter.type === "range") {
-        initialStates[filter.label] = [filter.min || 0, filter.max || 1000000];
-      } else if (filter.type === "checklist") {
-        initialStates[filter.label] = [];
-      } else if (filter.type === "toggle") {
-        initialStates[filter.label] = false;
+      if (appliedFilters[filter.label] !== undefined) {
+        // Use applied filter value
+        initialStates[filter.label] = appliedFilters[filter.label];
+      } else {
+        // Initialize with default values
+        if (filter.type === "range") {
+          initialStates[filter.label] = [filter.min || 0, filter.max || 1000000];
+        } else if (filter.type === "checklist") {
+          initialStates[filter.label] = [];
+        } else if (filter.type === "toggle") {
+          initialStates[filter.label] = false;
+        }
       }
     });
     setFilterStates(initialStates);
-  }, [categoryFilters, category, subCategory]);
+  }, [categoryFilters, category, subCategory, appliedFilters]);
 
   // Update filter state
   const updateFilterState = (
@@ -96,7 +110,11 @@ const Filter: React.FC<FilterProps> = ({
   };
 
   if (loading) {
-    return <div>Loading filters...</div>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 3 }}>
+        <LoadingSpinner message="Loading filters..." />
+      </Box>
+    );
   }
 
   const handleFilterChange = (
@@ -104,6 +122,28 @@ const Filter: React.FC<FilterProps> = ({
     value: number[] | string[] | boolean
   ) => {
     updateFilterState(filterLabel, value);
+  };
+
+  const handleApplyFilters = () => {
+    onApplyFilters(filterStates);
+    if (isMobile) {
+      setOpen(false);
+    }
+  };
+
+  const handleClearFilters = () => {
+    const clearedStates: { [key: string]: number[] | string[] | boolean } = {};
+    categoryFilters.forEach((filter) => {
+      if (filter.type === "range") {
+        clearedStates[filter.label] = [filter.min || 0, filter.max || 1000000];
+      } else if (filter.type === "checklist") {
+        clearedStates[filter.label] = [];
+      } else if (filter.type === "toggle") {
+        clearedStates[filter.label] = false;
+      }
+    });
+    setFilterStates(clearedStates);
+    onClearFilters();
   };
 
   if (isMobile) {
@@ -118,13 +158,14 @@ const Filter: React.FC<FilterProps> = ({
               sortOptions={sortOptions}
               currentSort={currentSort}
               onSortChange={onSortChange}
+              isLoading={loading}
             />
           )}
         </Box>
         {open && (
           <Paper
             elevation={4}
-            sx={{
+            sx={theme => ({
               position: "fixed",
               top: 0,
               left: 0,
@@ -134,13 +175,14 @@ const Filter: React.FC<FilterProps> = ({
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
-            }}
+              backgroundColor: theme.palette.background.default,
+            })}
           >
             <Box
               display="flex"
               justifyContent="flex-end"
               p={2}
-              sx={{ borderBottom: "1px solid #f0f0f0" }}
+              sx={theme => ({ borderBottom: `1px solid ${theme.palette.divider}` })}
             >
               <IconButton onClick={() => setOpen(false)}>
                 <CloseIcon />
@@ -188,7 +230,7 @@ const Filter: React.FC<FilterProps> = ({
                                   )
                                 );
                               }}
-                              sx={{ justifyContent: "flex-start" }}
+                              sx={theme => ({ justifyContent: "flex-start", color: theme.palette.text.primary })}
                             >
                               {subCat}
                             </Button>
@@ -199,7 +241,7 @@ const Filter: React.FC<FilterProps> = ({
                       )}
                     </AccordionDetails>
                   </Accordion>
-                  <Divider sx={{ color: "#f0f0f0", margin: "0.5rem" }} />
+                  <Divider sx={theme => ({ color: theme.palette.divider, margin: "0.5rem" })} />
                 </Box>
               )}
 
@@ -217,22 +259,20 @@ const Filter: React.FC<FilterProps> = ({
                 mt={3}
                 display="flex"
                 gap={2}
-                sx={{
+                sx={theme => ({
                   position: "sticky",
                   bottom: 0,
-                  backgroundColor: "background.paper",
+                  backgroundColor: theme.palette.background.paper,
                   pt: 2,
                   pb: 2,
-                  borderTop: "1px solid #f0f0f0",
-                }}
+                  borderTop: `1px solid ${theme.palette.divider}`,
+                })}
               >
                 <Button
                   variant="contained"
                   color="primary"
                   fullWidth
-                  onClick={() => {
-                    /* TODO: Apply filter logic */
-                  }}
+                  onClick={handleApplyFilters}
                 >
                   Apply Filters
                 </Button>
@@ -240,9 +280,8 @@ const Filter: React.FC<FilterProps> = ({
                   variant="outlined"
                   color="secondary"
                   //fullWidth
-                  onClick={() => {
-                    /* TODO: Clear filter logic */
-                  }}
+                  onClick={handleClearFilters}
+                  sx={theme => ({ borderColor: theme.palette.divider })}
                 >
                   Clear
                 </Button>
@@ -260,7 +299,7 @@ const Filter: React.FC<FilterProps> = ({
       width={"15rem"}
       padding={"1rem"}
       borderRadius={"0.2rem"}
-      sx={{ border: "solid #f0f0f0 1px" }}
+      sx={theme => ({ border: `solid ${theme.palette.divider} 1px`, backgroundColor: theme.palette.background.paper })}
     >
       {!subCategory && (
         <Box>
@@ -283,7 +322,7 @@ const Filter: React.FC<FilterProps> = ({
                           createSubcategoryUrl(originalCategoryName, subCat)
                         )
                       }
-                      sx={{ justifyContent: "flex-start" }}
+                      sx={theme => ({ justifyContent: "flex-start", color: theme.palette.text.primary })}
                     >
                       {subCat}
                     </Button>
@@ -294,7 +333,7 @@ const Filter: React.FC<FilterProps> = ({
               )}
             </AccordionDetails>
           </Accordion>
-          <Divider sx={{ color: "#f0f0f0", margin: "0.5rem" }} />
+          <Divider sx={theme => ({ color: theme.palette.divider, margin: "0.5rem" })} />
         </Box>
       )}
 
@@ -313,9 +352,7 @@ const Filter: React.FC<FilterProps> = ({
           variant="contained"
           color="primary"
           fullWidth
-          onClick={() => {
-            /* TODO: Apply filter logic */
-          }}
+          onClick={handleApplyFilters}
         >
           Apply Filters
         </Button>
@@ -323,9 +360,7 @@ const Filter: React.FC<FilterProps> = ({
           variant="outlined"
           color="secondary"
           //fullWidth
-          onClick={() => {
-            /* TODO: Clear filter logic */
-          }}
+          onClick={handleClearFilters}
         >
           Clear
         </Button>

@@ -36,7 +36,12 @@ export default function Header() {
       <Box
         display="flex"
         width="100%"
-        sx={{ backgroundColor: "#f0f0f0" }}
+        sx={(theme) => ({
+          backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
+          position: "relative",
+          zIndex: 1,
+        })}
         flexDirection="column"
         marginBottom={isMobile ? 1 : 3}
       >
@@ -95,16 +100,17 @@ export default function Header() {
               display="flex"
               flexDirection="row"
               alignItems="center"
-              justifyContent="flex-start"
+              justifyContent="space-between"
               width="100%"
-              position="relative"
               p={2}
+              sx={{ overflow: "hidden" }}
             >
               {/* Left: Logo and Title */}
               <Box
                 display="flex"
                 alignItems="center"
                 justifyContent="flex-start"
+                sx={{ minWidth: 0, flex: 1 }}
               >
                 <Box
                   component={"img"}
@@ -115,9 +121,20 @@ export default function Header() {
                     maxHeight: "40px",
                     objectFit: "contain",
                     cursor: "pointer",
+                    flexShrink: 0,
                   }}
                 />
-                <Typography fontWeight={"bold"} fontSize={"1.5rem"}>
+                <Typography
+                  fontWeight={"bold"}
+                  fontSize={"1.5rem"}
+                  sx={(theme) => ({
+                    ml: 1,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    color: theme.palette.text.primary,
+                  })}
+                >
                   {siteTitle}
                 </Typography>
               </Box>
@@ -126,10 +143,12 @@ export default function Header() {
                 display="flex"
                 alignItems="center"
                 gap={2}
-                position="absolute"
-                right={24}
-                top="50%"
-                sx={{ transform: "translateY(-50%)" }}
+                sx={{
+                  flexShrink: 0,
+                  ml: 2,
+                  position: "relative",
+                  zIndex: 9999,
+                }}
               >
                 <SearchBox />
                 <Button variant="contained" sx={{ height: "2rem" }}>
@@ -139,7 +158,7 @@ export default function Header() {
               </Box>
             </Box>
             {/* MegaMenu below */}
-            <Box width="100%">
+            <Box width="100%" sx={{ overflow: "hidden" }}>
               <MegaMenu categories={categories} siteTitle={siteTitle} />
             </Box>
           </>

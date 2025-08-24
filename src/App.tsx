@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Box } from "@mui/material";
 import Header from "./components/Header";
 import Homepage from "./pages/Homepage";
 import FAQ from "./pages/FAQ";
 import ProductsPage from "./pages/ProductsPage";
+import ProductDetail from "./pages/ProductDetail";
+import SearchResults from "./pages/SearchResults";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { getTheme } from "./utils/theme";
+import AboutUs from "./pages/AboutUsPage";
+import OrderList from "./pages/CartManagementPage";
+import Footer from "./components/Footer";
+
 
 const queryClient = new QueryClient();
 
@@ -24,6 +34,7 @@ interface WebShopData {
       order: number;
     }>;
   };
+  theme: "dark" | "light";
 }
 
 function App() {
@@ -46,7 +57,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner message="Loading application..." fullScreen />;
   }
 
   if (!webShopData) {
@@ -89,17 +100,30 @@ function App() {
     )),
   ]);
 
+  // Get theme mode from backend data (default to 'light')
+  const themeMode = (webShopData.theme === 'dark' ? 'dark' : 'light') as 'light' | 'dark';
+  const theme = getTheme(themeMode);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/faq" element={<FAQ />} /> {}
-          {dynamicRoutes}
-        </Routes>
-      </Router>
-    </QueryClientProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/about-us" element={<AboutUs/>}/>
+              <Route path="/cart-management" element={<OrderList/>}/>
+              <Route path="/product/:productId" element={<ProductDetail />} />
+              <Route path="/search" element={<SearchResults />} />
+              {dynamicRoutes}
+            </Routes>
+            <Footer/>
+          </Box>
+        </Router>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
