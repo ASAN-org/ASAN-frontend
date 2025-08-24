@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
 import Header from "./components/Header";
 import Homepage from "./pages/Homepage";
+import FAQ from "./pages/FAQ";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetail from "./pages/ProductDetail";
 import SearchResults from "./pages/SearchResults";
@@ -64,6 +65,7 @@ function App() {
   }
 
   // Generate dynamic routes based on fetched data
+  
   const dynamicRoutes = webShopData.categories.flatMap((category) => [
     // Category main page
     <Route
