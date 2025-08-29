@@ -35,6 +35,29 @@ interface WebShopData {
     }>;
   };
   theme: "dark" | "light";
+  footer: {
+    faq_enabled: boolean;
+    shop_info: {
+      address: string;
+      email: string;
+      phone: string;
+      working_hours: string;
+    };
+    social_media: {
+      instagram: string;
+      linkedin: string;
+      telegram: string;
+    };
+  };
+  about_us: {
+    content: string;
+    title: string;
+  };
+  faq: Array<{
+    question: string;
+    answer: string;
+    order: number;
+  }>;
 }
 
 function App() {
@@ -129,7 +152,7 @@ function App() {
                 <Route path="/faq" element={<FAQ />} />
                 {dynamicRoutes}
               </Routes>
-              <Footer webshopName={webShopData.title} />
+              <Footer webshopData={webShopData} />
             </Box>
           </Router>
         </CartProvider>
