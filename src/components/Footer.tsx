@@ -2,7 +2,6 @@ import React from "react";
 import {
   Box,
   Container,
-  Grid,
   Link,
   Typography,
   Divider,
@@ -85,202 +84,202 @@ const Footer: React.FC<FooterProps> = ({ webshopData }) => {
       }}
     >
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+            gap: 3,
+          }}
+        >
           {/* Company Information */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h5" color="text.primary" gutterBottom>
-                {webshopData.title}
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 3, lineHeight: 1.6 }}>
-                {getAboutContent()}
-              </Typography>
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h5" color="text.primary" gutterBottom>
+              {webshopData.title}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 3, lineHeight: 1.6 }}>
+              {getAboutContent()}
+            </Typography>
 
-              {/* Quick Navigation */}
-              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+            {/* Quick Navigation */}
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<HomeIcon />}
+                component={Link}
+                href="/"
+                sx={{ textTransform: "none", mb: 1 }}
+              >
+                Home
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<InfoIcon />}
+                component={Link}
+                href="/about-us"
+                sx={{ textTransform: "none", mb: 1 }}
+              >
+                About Us
+              </Button>
+              {webshopData.footer.faq_enabled && (
                 <Button
                   variant="outlined"
                   size="small"
-                  startIcon={<HomeIcon />}
+                  startIcon={<HelpIcon />}
                   component={Link}
-                  href="/"
+                  href="/faq"
                   sx={{ textTransform: "none", mb: 1 }}
                 >
-                  Home
+                  FAQ
                 </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  startIcon={<InfoIcon />}
-                  component={Link}
-                  href="/about-us"
-                  sx={{ textTransform: "none", mb: 1 }}
-                >
-                  About Us
-                </Button>
-                {webshopData.footer.faq_enabled && (
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    startIcon={<HelpIcon />}
-                    component={Link}
-                    href="/faq"
-                    sx={{ textTransform: "none", mb: 1 }}
-                  >
-                    FAQ
-                  </Button>
-                )}
-              </Stack>
-            </Box>
-          </Grid>
+              )}
+            </Stack>
+          </Box>
 
           {/* Contact Information */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                Contact Information
-              </Typography>
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Contact Information
+            </Typography>
 
-              <Stack spacing={2}>
-                {/* Address */}
-                <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-                  <LocationOnIcon
-                    sx={{
-                      color: "primary.main",
-                      mr: 1,
-                      mt: 0.2,
-                      fontSize: "1.2rem",
-                    }}
-                  />
-                  <Typography variant="body2" sx={{ lineHeight: 1.4 }}>
-                    {webshopData.footer.shop_info.address}
-                  </Typography>
-                </Box>
+            <Stack spacing={2}>
+              {/* Address */}
+              <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+                <LocationOnIcon
+                  sx={{
+                    color: "primary.main",
+                    mr: 1,
+                    mt: 0.2,
+                    fontSize: "1.2rem",
+                  }}
+                />
+                <Typography variant="body2" sx={{ lineHeight: 1.4 }}>
+                  {webshopData.footer.shop_info.address}
+                </Typography>
+              </Box>
 
-                {/* Phone */}
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <PhoneIcon
-                    sx={{
-                      color: "primary.main",
-                      mr: 1,
-                      fontSize: "1.2rem",
-                    }}
-                  />
-                  <Link
-                    href={`tel:${webshopData.footer.shop_info.phone}`}
-                    color="inherit"
-                    underline="hover"
-                    sx={{ textDecoration: "none" }}
-                  >
-                    {webshopData.footer.shop_info.phone}
-                  </Link>
-                </Box>
+              {/* Phone */}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <PhoneIcon
+                  sx={{
+                    color: "primary.main",
+                    mr: 1,
+                    fontSize: "1.2rem",
+                  }}
+                />
+                <Link
+                  href={`tel:${webshopData.footer.shop_info.phone}`}
+                  color="inherit"
+                  underline="hover"
+                  sx={{ textDecoration: "none" }}
+                >
+                  {webshopData.footer.shop_info.phone}
+                </Link>
+              </Box>
 
-                {/* Email */}
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <EmailIcon
-                    sx={{
-                      color: "primary.main",
-                      mr: 1,
-                      fontSize: "1.2rem",
-                    }}
-                  />
-                  <Link
-                    href={`mailto:${webshopData.footer.shop_info.email}`}
-                    color="inherit"
-                    underline="hover"
-                    sx={{ textDecoration: "none" }}
-                  >
-                    {webshopData.footer.shop_info.email}
-                  </Link>
-                </Box>
+              {/* Email */}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <EmailIcon
+                  sx={{
+                    color: "primary.main",
+                    mr: 1,
+                    fontSize: "1.2rem",
+                  }}
+                />
+                <Link
+                  href={`mailto:${webshopData.footer.shop_info.email}`}
+                  color="inherit"
+                  underline="hover"
+                  sx={{ textDecoration: "none" }}
+                >
+                  {webshopData.footer.shop_info.email}
+                </Link>
+              </Box>
 
-                {/* Working Hours */}
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <AccessTimeIcon
-                    sx={{
-                      color: "primary.main",
-                      mr: 1,
-                      fontSize: "1.2rem",
-                    }}
-                  />
-                  <Typography variant="body2">
-                    {webshopData.footer.shop_info.working_hours}
-                  </Typography>
-                </Box>
-              </Stack>
-            </Box>
-          </Grid>
+              {/* Working Hours */}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <AccessTimeIcon
+                  sx={{
+                    color: "primary.main",
+                    mr: 1,
+                    fontSize: "1.2rem",
+                  }}
+                />
+                <Typography variant="body2">
+                  {webshopData.footer.shop_info.working_hours}
+                </Typography>
+              </Box>
+            </Stack>
+          </Box>
 
           {/* Social Media & Quick Links */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                Follow Us
-              </Typography>
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Follow Us
+            </Typography>
 
-              {/* Social Media Icons */}
-              <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-                {webshopData.footer.social_media.instagram && (
-                  <IconButton
-                    aria-label="Instagram"
-                    href={webshopData.footer.social_media.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    sx={{
-                      color: socialMediaColors.instagram,
-                      "&:hover": {
-                        backgroundColor: `${socialMediaColors.instagram}15`,
-                        transform: "scale(1.1)",
-                      },
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <InstagramIcon />
-                  </IconButton>
-                )}
+            {/* Social Media Icons */}
+            <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+              {webshopData.footer.social_media.instagram && (
+                <IconButton
+                  aria-label="Instagram"
+                  href={webshopData.footer.social_media.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    color: socialMediaColors.instagram,
+                    "&:hover": {
+                      backgroundColor: `${socialMediaColors.instagram}15`,
+                      transform: "scale(1.1)",
+                    },
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <InstagramIcon />
+                </IconButton>
+              )}
 
-                {webshopData.footer.social_media.linkedin && (
-                  <IconButton
-                    aria-label="LinkedIn"
-                    href={webshopData.footer.social_media.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    sx={{
-                      color: socialMediaColors.linkedin,
-                      "&:hover": {
-                        backgroundColor: `${socialMediaColors.linkedin}15`,
-                        transform: "scale(1.1)",
-                      },
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <LinkedInIcon />
-                  </IconButton>
-                )}
+              {webshopData.footer.social_media.linkedin && (
+                <IconButton
+                  aria-label="LinkedIn"
+                  href={webshopData.footer.social_media.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    color: socialMediaColors.linkedin,
+                    "&:hover": {
+                      backgroundColor: `${socialMediaColors.linkedin}15`,
+                      transform: "scale(1.1)",
+                    },
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <LinkedInIcon />
+                </IconButton>
+              )}
 
-                {webshopData.footer.social_media.telegram && (
-                  <IconButton
-                    aria-label="Telegram"
-                    href={webshopData.footer.social_media.telegram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    sx={{
-                      color: socialMediaColors.telegram,
-                      "&:hover": {
-                        backgroundColor: `${socialMediaColors.telegram}15`,
-                        transform: "scale(1.1)",
-                      },
-                      transition: "all 0.2s ease",
-                    }}
-                  >
-                    <TelegramIcon />
-                  </IconButton>
-                )}
-              </Stack>
-            </Box>
-          </Grid>
-        </Grid>
+              {webshopData.footer.social_media.telegram && (
+                <IconButton
+                  aria-label="Telegram"
+                  href={webshopData.footer.social_media.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    color: socialMediaColors.telegram,
+                    "&:hover": {
+                      backgroundColor: `${socialMediaColors.telegram}15`,
+                      transform: "scale(1.1)",
+                    },
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <TelegramIcon />
+                </IconButton>
+              )}
+            </Stack>
+          </Box>
+        </Box>
 
         <Divider sx={{ my: 4 }} />
 
