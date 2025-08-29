@@ -16,7 +16,6 @@ import AboutUs from "./pages/AboutUsPage";
 import OrderList from "./pages/CartManagementPage";
 import Footer from "./components/Footer";
 
-
 const queryClient = new QueryClient();
 
 interface WebShopData {
@@ -65,7 +64,7 @@ function App() {
   }
 
   // Generate dynamic routes based on fetched data
-  
+
   const dynamicRoutes = webShopData.categories.flatMap((category) => [
     // Category main page
     <Route
@@ -101,7 +100,9 @@ function App() {
   ]);
 
   // Get theme mode from backend data (default to 'light')
-  const themeMode = (webShopData.theme === 'dark' ? 'dark' : 'light') as 'light' | 'dark';
+  const themeMode = (webShopData.theme === "dark" ? "dark" : "light") as
+    | "light"
+    | "dark";
   const theme = getTheme(themeMode);
 
   return (
@@ -113,14 +114,14 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Homepage />} />
-              <Route path="/about-us" element={<AboutUs/>}/>
-              <Route path="/cart-management" element={<OrderList/>}/>
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/cart-management" element={<OrderList />} />
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/search" element={<SearchResults />} />
               <Route path="/faq" element={<FAQ />} />
               {dynamicRoutes}
             </Routes>
-            <Footer/>
+            <Footer webshopName={webShopData.title} />
           </Box>
         </Router>
       </QueryClientProvider>

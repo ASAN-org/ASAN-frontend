@@ -14,6 +14,7 @@ import {
   Pagination,
   Stack,
 } from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material";
 import { searchProductsForPage, getPriceRange } from "../utils/searchUtils";
 import { mockProducts } from "../types/mockProducts";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -120,7 +121,7 @@ const SearchResults: React.FC = () => {
     setTimeout(() => setIsLoading(false), 300);
   };
 
-  const handleSortChange = (event: any) => {
+  const handleSortChange = (event: SelectChangeEvent<string>) => {
     setIsLoading(true);
     setSortBy(event.target.value);
     setCurrentPage(1); // Reset to first page when sort changes
