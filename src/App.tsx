@@ -114,7 +114,10 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Homepage />} />
-              <Route path="/about-us" element={<AboutUs />} />
+              <Route
+                path="/about-us"
+                element={<AboutUs webshopData={webShopData} />}
+              />
               <Route path="/cart-management" element={<OrderList />} />
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/search" element={<SearchResults />} />
