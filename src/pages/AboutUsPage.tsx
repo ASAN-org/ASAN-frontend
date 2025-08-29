@@ -1,5 +1,13 @@
 import React from "react";
-import { Container, Typography, Box, Card, Grid, Avatar } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Box,
+  Card,
+  Grid,
+  Avatar,
+  useTheme,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import {
   Timeline,
@@ -53,6 +61,8 @@ interface AboutUsProps {
 }
 
 const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
+  const theme = useTheme();
+
   // Replace all instances of "TechNest" with the webshop title
   const replaceTechNest = (text: string) => {
     return text.replace(/TechNest/g, webshopData.title);
@@ -98,25 +108,29 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
       icon: <DevicesIcon fontSize="large" sx={{ color: "white" }} />,
       label: "Products Sold",
       value: "2.5M+",
-      bgColor: "#6a11cb",
+      bgColor:
+        theme.palette.mode === "dark" ? theme.palette.primary.dark : "#6a11cb",
     },
     {
       icon: <SupportAgentIcon fontSize="large" sx={{ color: "white" }} />,
       label: "Support Queries",
       value: "98% resolved",
-      bgColor: "#2575fc",
+      bgColor:
+        theme.palette.mode === "dark" ? theme.palette.primary.main : "#2575fc",
     },
     {
       icon: <LocalShippingIcon fontSize="large" sx={{ color: "white" }} />,
       label: "On-Time Delivery",
       value: "99.2%",
-      bgColor: "#fc4a1a",
+      bgColor:
+        theme.palette.mode === "dark" ? theme.palette.error.main : "#fc4a1a",
     },
     {
       icon: <SecurityIcon fontSize="large" sx={{ color: "white" }} />,
       label: "Authentic Products",
       value: "100%",
-      bgColor: "#fbbd61",
+      bgColor:
+        theme.palette.mode === "dark" ? theme.palette.warning.main : "#fbbd61",
     },
   ];
 
@@ -162,14 +176,14 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
     <Box
       sx={{
         width: "99vw",
-        backgroundColor: "rgba(249,249,255,1)",
+        backgroundColor: theme.palette.background.default,
         py: 3,
         overflowX: "hidden",
       }}
     >
       <Container
         sx={{
-          backgroundColor: "rgba(249,249,255,1)",
+          backgroundColor: theme.palette.background.default,
           overflow: "hidden",
         }}
       >
@@ -186,7 +200,10 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
               transform: "translateX(-50%)",
               width: "80px",
               height: "4px",
-              background: "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
+              background:
+                theme.palette.mode === "dark"
+                  ? `linear-gradient(to right, ${theme.palette.primary.main} 0%, ${theme.palette.primary.light} 100%)`
+                  : "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
               borderRadius: "2px",
             },
           }}
@@ -198,7 +215,10 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             sx={{
               fontWeight: "bold",
               mb: 4,
-              background: "linear-gradient(to right, #6e48aa, #9d50bb)",
+              background:
+                theme.palette.mode === "dark"
+                  ? `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                  : "linear-gradient(to right, #6e48aa, #9d50bb)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               display: "inline-block",
@@ -219,7 +239,8 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             align="center"
             sx={{
               mb: 4,
-              color: "#6e48aa",
+              color:
+                theme.palette.mode === "dark" ? "primary.light" : "#6e48aa",
               fontWeight: 600,
             }}
           >
@@ -240,18 +261,33 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
                     sx={{
                       p: 1,
                       textAlign: "center",
-                      background: `linear-gradient(135deg, ${
-                        ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][index]
-                      } 0%, ${lighten(
-                        ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][index],
-                        0.2
-                      )} 100%)`,
+                      background:
+                        theme.palette.mode === "dark"
+                          ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.light} 100%)`
+                          : `linear-gradient(135deg, ${
+                              ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][
+                                index
+                              ]
+                            } 0%, ${lighten(
+                              ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][
+                                index
+                              ],
+                              0.2
+                            )} 100%)`,
                       color: "white",
                       borderRadius: "8px",
-                      boxShadow: `0 4px 8px ${alpha(
-                        ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][index],
-                        0.2
-                      )}`,
+                      boxShadow:
+                        theme.palette.mode === "dark"
+                          ? `0 4px 8px ${alpha(
+                              theme.palette.primary.main,
+                              0.2
+                            )}`
+                          : `0 4px 8px ${alpha(
+                              ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][
+                                index
+                              ],
+                              0.2
+                            )}`,
                     }}
                   >
                     <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -270,8 +306,12 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
               lineHeight: 1.8,
               mb: 4,
               whiteSpace: "pre-line", // Preserve line breaks from backend
+              color: theme.palette.text.primary,
               "& strong": {
-                background: "linear-gradient(to right, #4facfe, #00f2fe)",
+                background:
+                  theme.palette.mode === "dark"
+                    ? `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                    : "linear-gradient(to right, #4facfe, #00f2fe)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 fontWeight: 600,
@@ -294,7 +334,10 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             align="center"
             sx={{
               fontWeight: "bold",
-              background: "linear-gradient(to right, #6e48aa, #9d50bb)",
+              background:
+                theme.palette.mode === "dark"
+                  ? `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                  : "linear-gradient(to right, #6e48aa, #9d50bb)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               display: "inline-block",
@@ -307,7 +350,8 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             align="center"
             sx={{
               mb: 4,
-              color: "#6e48aa",
+              color:
+                theme.palette.mode === "dark" ? "primary.light" : "#6e48aa",
               fontWeight: 500,
             }}
           >
@@ -318,7 +362,10 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             position="alternate"
             sx={{
               "& .MuiTimelineDot-root": {
-                boxShadow: "0 0 0 4px rgba(110,72,170,0.1)",
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 0 0 4px rgba(144,202,249,0.2)"
+                    : "0 0 0 4px rgba(110,72,170,0.1)",
               },
             }}
           >
@@ -332,13 +379,16 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
                 <TimelineSeparator>
                   <TimelineDot
                     sx={{
-                      backgroundColor: [
-                        "#4facfe",
-                        "#a6c1ee",
-                        "#ff758c",
-                        "#ff7eb3",
-                        "#6e48aa",
-                      ][index],
+                      backgroundColor:
+                        theme.palette.mode === "dark"
+                          ? theme.palette.primary.main
+                          : [
+                              "#4facfe",
+                              "#a6c1ee",
+                              "#ff758c",
+                              "#ff7eb3",
+                              "#6e48aa",
+                            ][index],
                       width: "16px",
                       height: "16px",
                     }}
@@ -346,12 +396,12 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
                   {index !== timelineItems.length - 1 && (
                     <TimelineConnector
                       sx={{
-                        backgroundColor: [
-                          "#4facfe",
-                          "#a6c1ee",
-                          "#ff758c",
-                          "#ff7eb3",
-                        ][index % 4],
+                        backgroundColor:
+                          theme.palette.mode === "dark"
+                            ? theme.palette.primary.light
+                            : ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][
+                                index % 4
+                              ],
                         width: "2px",
                       }}
                     />
@@ -361,21 +411,38 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
                   <Card
                     sx={{
                       p: 2,
-                      backgroundColor: `${lighten(
-                        ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3", "#6e48aa"][
-                          index
-                        ],
-                        0.9
-                      )}`,
+                      backgroundColor:
+                        theme.palette.mode === "dark"
+                          ? theme.palette.background.paper
+                          : `${lighten(
+                              [
+                                "#4facfe",
+                                "#a6c1ee",
+                                "#ff758c",
+                                "#ff7eb3",
+                                "#6e48aa",
+                              ][index],
+                              0.9
+                            )}`,
                       borderLeft: `4px solid ${
-                        ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3", "#6e48aa"][
-                          index
-                        ]
+                        theme.palette.mode === "dark"
+                          ? theme.palette.primary.main
+                          : [
+                              "#4facfe",
+                              "#a6c1ee",
+                              "#ff758c",
+                              "#ff7eb3",
+                              "#6e48aa",
+                            ][index]
                       }`,
                       borderRadius: "0 8px 8px 0",
                     }}
                   >
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight="bold"
+                      color="text.primary"
+                    >
                       {item.cardTitle}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -396,8 +463,13 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             px: 4,
             borderRadius: 2,
             background:
-              "linear-gradient(135deg, rgba(249,249,255,1) 0%, rgba(245,245,255,1) 100%)",
-            boxShadow: "0 8px 24px rgba(110,72,170,0.1)",
+              theme.palette.mode === "dark"
+                ? `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default} 100%)`
+                : "linear-gradient(135deg, rgba(249,249,255,1) 0%, rgba(245,245,255,1) 100%)",
+            boxShadow:
+              theme.palette.mode === "dark"
+                ? "0 8px 24px rgba(0,0,0,0.3)"
+                : "0 8px 24px rgba(110,72,170,0.1)",
           }}
         >
           <Typography
@@ -406,7 +478,10 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             align="center"
             sx={{
               fontWeight: "bold",
-              background: "linear-gradient(to right, #fc4a1a, #fbbd61)",
+              background:
+                theme.palette.mode === "dark"
+                  ? `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                  : "linear-gradient(to right, #fc4a1a, #fbbd61)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -417,7 +492,8 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             align="center"
             sx={{
               mb: 6,
-              color: "#6e48aa",
+              color:
+                theme.palette.mode === "dark" ? "primary.light" : "#6e48aa",
               fontWeight: 500,
             }}
           >
@@ -428,14 +504,32 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             {[
               {
                 icon: (
-                  <CheckCircleIcon sx={{ fontSize: 40, color: "#4facfe" }} />
+                  <CheckCircleIcon
+                    sx={{
+                      fontSize: 40,
+                      color:
+                        theme.palette.mode === "dark"
+                          ? theme.palette.primary.main
+                          : "#4facfe",
+                    }}
+                  />
                 ),
                 title: "Hassle-Free Returns",
                 description:
                   "30-day no-questions-asked return policy with free pickup for all products.",
               },
               {
-                icon: <DevicesIcon sx={{ fontSize: 40, color: "#a6c1ee" }} />,
+                icon: (
+                  <DevicesIcon
+                    sx={{
+                      fontSize: 40,
+                      color:
+                        theme.palette.mode === "dark"
+                          ? theme.palette.primary.light
+                          : "#a6c1ee",
+                    }}
+                  />
+                ),
                 title: "Hands-On Experience",
                 description:
                   "Try before you buy at our experience centers in 12 cities nationwide.",
@@ -474,14 +568,27 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
                       p: 3,
                       textAlign: "center",
                       borderTop: `4px solid ${
-                        ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][index]
+                        theme.palette.mode === "dark"
+                          ? theme.palette.primary.main
+                          : ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][index]
                       }`,
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                      boxShadow:
+                        theme.palette.mode === "dark"
+                          ? "0 4px 20px rgba(0,0,0,0.3)"
+                          : "0 4px 20px rgba(0,0,0,0.08)",
                       "&:hover": {
-                        boxShadow: `0 8px 24px ${alpha(
-                          ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][index],
-                          0.2
-                        )}`,
+                        boxShadow:
+                          theme.palette.mode === "dark"
+                            ? `0 8px 24px ${alpha(
+                                theme.palette.primary.main,
+                                0.2
+                              )}`
+                            : `0 8px 24px ${alpha(
+                                ["#4facfe", "#a6c1ee", "#ff758c", "#ff7eb3"][
+                                  index
+                                ],
+                                0.2
+                              )}`,
                       },
                     }}
                   >
@@ -497,7 +604,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
                     <Typography
                       variant="h6"
                       gutterBottom
-                      sx={{ fontWeight: "bold" }}
+                      sx={{ fontWeight: "bold", color: "text.primary" }}
                     >
                       {item.title}
                     </Typography>
@@ -517,8 +624,14 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             p: 6,
             borderRadius: 2,
             background:
-              "linear-gradient(135deg, rgba(110,72,170,0.1) 0%, rgba(245,245,255,1) 100%)",
-            borderLeft: "6px solid #6e48aa",
+              theme.palette.mode === "dark"
+                ? `linear-gradient(135deg, ${theme.palette.primary.dark}10 0%, ${theme.palette.background.paper} 100%)`
+                : "linear-gradient(135deg, rgba(110,72,170,0.1) 0%, rgba(245,245,255,1) 100%)",
+            borderLeft: `6px solid ${
+              theme.palette.mode === "dark"
+                ? theme.palette.primary.main
+                : "#6e48aa"
+            }`,
             position: "relative",
             overflow: "hidden",
           }}
@@ -530,7 +643,10 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
             sx={{
               fontWeight: "bold",
               mb: 4,
-              background: "linear-gradient(to right, #6e48aa, #9d50bb)",
+              background:
+                theme.palette.mode === "dark"
+                  ? `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                  : "linear-gradient(to right, #6e48aa, #9d50bb)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -549,7 +665,8 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
               align="center"
               sx={{
                 mb: 4,
-                color: "#6e48aa",
+                color:
+                  theme.palette.mode === "dark" ? "primary.light" : "#6e48aa",
                 fontWeight: 600,
               }}
             >
@@ -560,8 +677,12 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
               sx={{
                 fontSize: "1.1rem",
                 lineHeight: 1.8,
+                color: theme.palette.text.primary,
                 "& strong": {
-                  background: "linear-gradient(to right, #4facfe, #00f2fe)",
+                  background:
+                    theme.palette.mode === "dark"
+                      ? `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                      : "linear-gradient(to right, #4facfe, #00f2fe)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   fontWeight: 600,
@@ -578,8 +699,12 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
               sx={{
                 fontSize: "1.1rem",
                 lineHeight: 1.8,
+                color: theme.palette.text.primary,
                 "& strong": {
-                  background: "linear-gradient(to right, #ff758c, #ff7eb3)",
+                  background:
+                    theme.palette.mode === "dark"
+                      ? `linear-gradient(to right, ${theme.palette.secondary.main}, ${theme.palette.secondary.light})`
+                      : "linear-gradient(to right, #ff758c, #ff7eb3)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   fontWeight: 600,
@@ -597,8 +722,12 @@ const AboutUs: React.FC<AboutUsProps> = ({ webshopData }) => {
                 fontSize: "1.1rem",
                 lineHeight: 1.8,
                 mb: 4,
+                color: theme.palette.text.primary,
                 "& strong": {
-                  background: "linear-gradient(to right, #6e48aa, #9d50bb)",
+                  background:
+                    theme.palette.mode === "dark"
+                      ? `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                      : "linear-gradient(to right, #6e48aa, #9d50bb)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   fontWeight: 600,

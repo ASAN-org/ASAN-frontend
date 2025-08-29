@@ -78,7 +78,10 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           <Button
             onClick={handleViewAll}
             sx={{
-              background: "linear-gradient(135deg, #60a5fa, #3b82f6)", // nice blue gradient
+              background:
+                theme.palette.mode === "dark"
+                  ? `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`
+                  : `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
               color: "white",
               px: 1.5,
               py: 0.6,
@@ -86,7 +89,10 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
               textTransform: "none",
               fontSize: "0.95rem",
               "&:hover": {
-                background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                background:
+                  theme.palette.mode === "dark"
+                    ? `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.dark})`
+                    : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
               },
             }}
           >

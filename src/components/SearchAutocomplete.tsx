@@ -143,7 +143,9 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
         maxHeight: isMobile ? "100%" : "400px",
         overflow: "auto",
         mt: isMobile ? 0 : 1,
-        border: `2px solid ${isMobile ? theme.palette.divider : "#1976d2"}`,
+        border: `2px solid ${
+          isMobile ? theme.palette.divider : theme.palette.primary.main
+        }`,
         backgroundColor: theme.palette.background.paper,
         borderRadius: isMobile ? 0 : 1,
         boxShadow: isMobile ? "none" : "0 8px 32px rgba(0,0,0,0.12)",
@@ -184,7 +186,9 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
                 },
                 py: isMobile ? 2 : 1.5,
                 cursor: "pointer",
-                borderBottom: isMobile ? "1px solid #f0f0f0" : "none",
+                borderBottom: isMobile
+                  ? `1px solid ${theme.palette.divider}`
+                  : "none",
               }}
             >
               <ListItemIcon sx={{ minWidth: isMobile ? 48 : 40 }}>

@@ -5,6 +5,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Box,
+  useTheme,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useWebshopData } from "../hooks/UseWebshopData";
@@ -41,6 +42,7 @@ import { useEffect, useState } from "react";
 export default function FAQ() {
   const { data } = useWebshopData();
   const [faqData, setFaqData] = useState([]);
+  const theme = useTheme();
 
   useEffect(() => {
     if (data) {
@@ -52,7 +54,7 @@ export default function FAQ() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%)",
+        background: theme.palette.background.default,
         py: 6,
       }}
     >
@@ -66,7 +68,8 @@ export default function FAQ() {
             letterSpacing: 1,
             color: "primary.main",
             mb: 4,
-            textShadow: "0 2px 8px #e0e7ef",
+            textShadow:
+              theme.palette.mode === "dark" ? "none" : "0 2px 8px #e0e7ef",
           }}
         >
           Frequently Asked Questions
@@ -78,8 +81,11 @@ export default function FAQ() {
               sx={{
                 mb: 2,
                 borderRadius: 3,
-                boxShadow: "0 4px 24px 0 rgba(60,72,100,0.08)",
-                background: "rgba(255,255,255,0.95)",
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 4px 24px 0 rgba(0,0,0,0.3)"
+                    : "0 4px 24px 0 rgba(60,72,100,0.08)",
+                background: theme.palette.background.paper,
                 "&:before": { display: "none" },
                 overflow: "hidden",
               }}
@@ -100,26 +106,31 @@ export default function FAQ() {
                   "& .MuiTypography-root": {
                     fontWeight: 600,
                     fontSize: "1.1rem",
-                    color: "primary.dark",
+                    color: theme.palette.text.primary,
                   },
                   px: 3,
                   py: 2,
                   background:
-                    "linear-gradient(90deg, #e3f2fd 0%, #f8fafc 100%)",
+                    theme.palette.mode === "dark"
+                      ? `linear-gradient(90deg, ${theme.palette.primary.dark}20 0%, ${theme.palette.background.paper} 100%)`
+                      : "linear-gradient(90deg, #e3f2fd 0%, #f8fafc 100%)",
                 }}
               >
                 <Typography variant="h6">{faq.question}</Typography>
               </AccordionSummary>
               <AccordionDetails
                 sx={{
-                  background: "#f8fafc",
+                  background:
+                    theme.palette.mode === "dark"
+                      ? theme.palette.background.default
+                      : "#f8fafc",
                   px: 3,
                   py: 2,
                 }}
               >
                 <Typography
                   variant="body1"
-                  color="black"
+                  color="text.primary"
                   sx={{ fontSize: "1.05rem" }}
                 >
                   {faq.answer}

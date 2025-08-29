@@ -220,7 +220,7 @@ const SearchResults: React.FC = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: "#64748b",
+                  color: "text.secondary",
                   mt: 0.5,
                 }}
               >
@@ -257,7 +257,7 @@ const SearchResults: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                color: "#64748b",
+                color: "text.secondary",
                 mb: 2,
               }}
             >

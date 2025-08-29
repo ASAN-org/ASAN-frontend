@@ -81,7 +81,7 @@ const Footer: React.FC<FooterProps> = ({ webshopData }) => {
         py: 6,
         mt: { xs: 4, md: 6 }, // Add top margin for proper spacing
         borderTop: `1px solid ${theme.palette.divider}`,
-        backgroundColor: "rgba(249,249,255,1)",
+        backgroundColor: theme.palette.background.paper,
       }}
     >
       <Container maxWidth="lg">

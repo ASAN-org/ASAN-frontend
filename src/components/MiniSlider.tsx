@@ -62,7 +62,7 @@ export function MiniImageSlider({
           position: "relative",
           overflow: "hidden",
           boxShadow: 1,
-          border: "2px solid grey",
+          border: `2px solid ${theme.palette.divider}`,
           borderRadius: "1rem",
           mx: "auto", // Horizontal centering fallback
         }}
@@ -87,7 +87,7 @@ export function MiniImageSlider({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "#f0f0f0",
+                backgroundColor: theme.palette.background.default,
               }}
             >
               <Box
@@ -113,12 +113,21 @@ export function MiniImageSlider({
             top: "50%",
             left: "8px",
             transform: "translateY(-50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            color: "white",
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.2)"
+                : "rgba(0, 0, 0, 0.5)",
+            color:
+              theme.palette.mode === "dark"
+                ? theme.palette.text.primary
+                : "white",
             borderRadius: "8px",
             padding: "4px",
             "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? "rgba(255, 255, 255, 0.3)"
+                  : "rgba(0, 0, 0, 0.7)",
             },
           }}
         >
@@ -132,12 +141,21 @@ export function MiniImageSlider({
             top: "50%",
             right: "8px",
             transform: "translateY(-50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            color: "white",
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.2)"
+                : "rgba(0, 0, 0, 0.5)",
+            color:
+              theme.palette.mode === "dark"
+                ? theme.palette.text.primary
+                : "white",
             borderRadius: "8px",
             padding: "4px",
             "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? "rgba(255, 255, 255, 0.3)"
+                  : "rgba(0, 0, 0, 0.7)",
             },
           }}
         >

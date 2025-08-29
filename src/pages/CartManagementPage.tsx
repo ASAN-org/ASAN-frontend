@@ -10,6 +10,7 @@ import {
   Button,
   Chip,
   Avatar,
+  useTheme,
 } from "@mui/material";
 import {
   Add,
@@ -25,6 +26,7 @@ const CartManagementPage: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, getCartTotal, clearCart } =
     useCart();
+  const theme = useTheme();
 
   const handleQuantityChange = (productId: string, delta: number) => {
     const currentItem = cartItems.find((item) => item.product.id === productId);
@@ -54,7 +56,7 @@ const CartManagementPage: React.FC = () => {
           justifyContent: "center",
           minHeight: "60vh",
           p: 3,
-          backgroundColor: "rgba(249,249,255,1)",
+          backgroundColor: theme.palette.background.default,
         }}
       >
         <ShoppingCart
@@ -100,7 +102,7 @@ const CartManagementPage: React.FC = () => {
         justifyContent: "space-between",
         gap: { xs: 2, md: 4 },
         p: { xs: 1, md: 3 },
-        backgroundColor: "rgba(249,249,255,1)",
+        backgroundColor: theme.palette.background.default,
       }}
     >
       {/* LEFT: Items List */}
@@ -164,10 +166,16 @@ const CartManagementPage: React.FC = () => {
                 width: { xs: "100%", lg: "30rem" },
                 borderRadius: "12px",
                 overflow: "visible",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                boxShadow:
+                  theme.palette.mode === "dark"
+                    ? "0 4px 20px rgba(0,0,0,0.3)"
+                    : "0 4px 20px rgba(0,0,0,0.08)",
                 position: "relative",
                 "&:hover": {
-                  boxShadow: "0 6px 24px rgba(25, 118, 210, 0.15)",
+                  boxShadow:
+                    theme.palette.mode === "dark"
+                      ? "0 6px 24px rgba(144,202,249,0.2)"
+                      : "0 6px 24px rgba(25, 118, 210, 0.15)",
                 },
               }}
             >
@@ -182,10 +190,13 @@ const CartManagementPage: React.FC = () => {
               >
                 <IconButton
                   sx={{
-                    bgcolor: "white",
+                    bgcolor: theme.palette.background.paper,
                     boxShadow: 1,
                     "&:hover": {
-                      bgcolor: "#e3f2fd",
+                      bgcolor:
+                        theme.palette.mode === "dark"
+                          ? theme.palette.primary.dark + "20"
+                          : "#e3f2fd",
                       color: "primary.main",
                     },
                   }}
@@ -209,7 +220,10 @@ const CartManagementPage: React.FC = () => {
                       width: { xs: 80, sm: 120 },
                       height: { xs: 80, sm: 120 },
                       borderRadius: "12px",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      boxShadow:
+                        theme.palette.mode === "dark"
+                          ? "0 4px 12px rgba(0,0,0,0.3)"
+                          : "0 4px 12px rgba(0,0,0,0.1)",
                     }}
                     variant="rounded"
                   />
@@ -224,6 +238,7 @@ const CartManagementPage: React.FC = () => {
                         display: "-webkit-box",
                         WebkitLineClamp: { xs: 2, sm: 1 },
                         WebkitBoxOrient: "vertical",
+                        color: "text.primary",
                       }}
                     >
                       {item.product.name}
@@ -245,9 +260,12 @@ const CartManagementPage: React.FC = () => {
                         sx={{
                           width: 32,
                           height: 32,
-                          border: "1px solid #e0e0e0",
+                          border: `1px solid ${theme.palette.divider}`,
                           "&:hover": {
-                            backgroundColor: "#e3f2fd",
+                            backgroundColor:
+                              theme.palette.mode === "dark"
+                                ? theme.palette.primary.dark + "20"
+                                : "#e3f2fd",
                           },
                         }}
                       >
@@ -259,8 +277,9 @@ const CartManagementPage: React.FC = () => {
                         sx={{
                           px: 1.5,
                           py: 0.5,
-                          border: "1px solid #e0e0e0",
+                          border: `1px solid ${theme.palette.divider}`,
                           borderRadius: "4px",
+                          color: "text.primary",
                         }}
                       >
                         {item.quantity}
@@ -271,9 +290,12 @@ const CartManagementPage: React.FC = () => {
                         sx={{
                           width: 32,
                           height: 32,
-                          border: "1px solid #e0e0e0",
+                          border: `1px solid ${theme.palette.divider}`,
                           "&:hover": {
-                            backgroundColor: "#e3f2fd",
+                            backgroundColor:
+                              theme.palette.mode === "dark"
+                                ? theme.palette.primary.dark + "20"
+                                : "#e3f2fd",
                           },
                         }}
                       >
@@ -292,7 +314,7 @@ const CartManagementPage: React.FC = () => {
                             <span
                               style={{
                                 textDecoration: "line-through",
-                                color: "#999",
+                                color: theme.palette.text.secondary,
                                 marginRight: "8px",
                               }}
                             >
@@ -333,9 +355,15 @@ const CartManagementPage: React.FC = () => {
           sx={{
             p: 3,
             borderRadius: "16px",
-            boxShadow: "0 8px 32px rgba(25, 118, 210, 0.1)",
+            boxShadow:
+              theme.palette.mode === "dark"
+                ? "0 8px 32px rgba(144,202,249,0.15)"
+                : "0 8px 32px rgba(25, 118, 210, 0.1)",
             border: "none",
-            background: "linear-gradient(to bottom, #fff, #f8fbff)",
+            background:
+              theme.palette.mode === "dark"
+                ? `linear-gradient(to bottom, ${theme.palette.background.paper}, ${theme.palette.background.default})`
+                : "linear-gradient(to bottom, #fff, #f8fbff)",
             marginTop: 2,
           }}
         >
@@ -350,25 +378,31 @@ const CartManagementPage: React.FC = () => {
 
           <Stack spacing={1} mb={2}>
             <Box display="flex" justifyContent="space-between">
-              <Typography variant="body2">
+              <Typography variant="body2" color="text.primary">
                 Subtotal ({cartItems.length} items)
               </Typography>
-              <Typography variant="body2">
+              <Typography variant="body2" color="text.primary">
                 {totalOriginal.toLocaleString()} Toman
               </Typography>
             </Box>
             <Box display="flex" justifyContent="space-between">
-              <Typography variant="body2">Shipping</Typography>
+              <Typography variant="body2" color="text.primary">
+                Shipping
+              </Typography>
               <Typography variant="body2" color="success.main">
                 Free
               </Typography>
             </Box>
           </Stack>
 
-          <Divider sx={{ my: 2, borderColor: "rgba(0,0,0,0.08)" }} />
+          <Divider sx={{ my: 2, borderColor: theme.palette.divider }} />
 
           <Box display="flex" justifyContent="space-between" mb={3}>
-            <Typography variant="subtitle1" fontWeight="bold">
+            <Typography
+              variant="subtitle1"
+              fontWeight="bold"
+              color="text.primary"
+            >
               Total
             </Typography>
             <Typography variant="h6" fontWeight="bold" color="primary.main">
