@@ -154,7 +154,10 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
             onMouseEnter={(e) => handleMouseEnter(e, category.name)}
             onClick={() => handleNavigate(category.name)}
             sx={(theme) => ({
-              color: "white",
+              color:
+                theme.palette.mode === "dark"
+                  ? theme.palette.text.primary
+                  : "white",
               textTransform: "none",
               px: 2,
               minWidth: "auto",
@@ -213,8 +216,16 @@ const MegaMenu: React.FC<MegaMenuProps> = ({ categories, siteTitle }) => {
     <Box
       sx={{
         width: "100%",
-        backgroundColor: isMobile ? "transparent" : "black",
-        color: isMobile ? "black" : "white",
+        backgroundColor: isMobile
+          ? "transparent"
+          : theme.palette.mode === "dark"
+          ? theme.palette.background.paper
+          : "black",
+        color: isMobile
+          ? theme.palette.text.primary
+          : theme.palette.mode === "dark"
+          ? theme.palette.text.primary
+          : "white",
       }}
     >
       {isMobile ? (

@@ -29,7 +29,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
 
   // Responsive settings
   const CARD_WIDTH = isMobile ? 160 : isTablet ? 180 : 220;
-  const GAP = 16;
+  const GAP = isMobile ? 30 : 16;
   const ITEMS_TO_SHOW = isMobile ? 2 : isTablet ? 3 : 6;
   const CONTAINER_WIDTH = ITEMS_TO_SHOW * (CARD_WIDTH + GAP) * 1.01;
 
@@ -49,7 +49,9 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
       sx={{
         width: "100%",
         overflow: "hidden",
-        px: { xs: 2, md: 4 },
+        px: { xs: 1, md: 4 }, // Reduce mobile padding
+        py: { xs: 1, md: 0 }, // Add vertical padding on mobile
+        mb: { xs: 3, md: 4 }, // Add bottom margin for spacing between sliders
       }}
     >
       {/* Header Section */}
@@ -60,8 +62,8 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           alignItems: "center",
           maxWidth: { xs: "100%", md: CONTAINER_WIDTH },
           mx: "auto",
-          mt: 3,
-          mb: 1,
+          mt: { xs: 2, md: 3 },
+          mb: { xs: 2, md: 1 },
         }}
       >
         <Typography
@@ -76,7 +78,10 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           <Button
             onClick={handleViewAll}
             sx={{
-              background: "linear-gradient(135deg, #60a5fa, #3b82f6)", // nice blue gradient
+              background:
+                theme.palette.mode === "dark"
+                  ? `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`
+                  : `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
               color: "white",
               px: 1.5,
               py: 0.6,
@@ -84,7 +89,10 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
               textTransform: "none",
               fontSize: "0.95rem",
               "&:hover": {
-                background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                background:
+                  theme.palette.mode === "dark"
+                    ? `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.dark})`
+                    : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
               },
             }}
           >

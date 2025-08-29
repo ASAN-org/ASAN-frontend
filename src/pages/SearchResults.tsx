@@ -14,6 +14,7 @@ import {
   Pagination,
   Stack,
 } from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material";
 import { searchProductsForPage, getPriceRange } from "../utils/searchUtils";
 import { mockProducts } from "../types/mockProducts";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -120,7 +121,7 @@ const SearchResults: React.FC = () => {
     setTimeout(() => setIsLoading(false), 300);
   };
 
-  const handleSortChange = (event: any) => {
+  const handleSortChange = (event: SelectChangeEvent<string>) => {
     setIsLoading(true);
     setSortBy(event.target.value);
     setCurrentPage(1); // Reset to first page when sort changes
@@ -219,7 +220,7 @@ const SearchResults: React.FC = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: "#64748b",
+                  color: "text.secondary",
                   mt: 0.5,
                 }}
               >
@@ -256,7 +257,7 @@ const SearchResults: React.FC = () => {
             <Typography
               variant="body2"
               sx={{
-                color: "#64748b",
+                color: "text.secondary",
                 mb: 2,
               }}
             >
@@ -410,6 +411,8 @@ const SearchResults: React.FC = () => {
                       display="flex"
                       alignItems="center"
                       justifyContent="space-between"
+                      flexDirection="column"
+                      gap={1}
                     >
                       <Typography
                         variant="h6"
@@ -419,19 +422,6 @@ const SearchResults: React.FC = () => {
                       >
                         Rp {product.price?.toLocaleString()}
                       </Typography>
-                      <Box
-                        sx={(theme) => ({
-                          backgroundColor: theme.palette.action.selected,
-                          color: theme.palette.primary.main,
-                          px: 1,
-                          py: 0.5,
-                          borderRadius: "4px",
-                          fontSize: "0.75rem",
-                          fontWeight: "500",
-                        })}
-                      >
-                        View
-                      </Box>
                     </Box>
                   </Box>
                 </Box>

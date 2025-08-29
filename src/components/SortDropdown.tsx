@@ -129,17 +129,17 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                           mb: 1,
                           backgroundColor:
                             currentSort === option.key
-                              ? "#f0f8ff"
+                              ? theme.palette.primary.light + "20"
                               : "transparent",
                           border:
                             currentSort === option.key
-                              ? "1px solid #2196f3"
+                              ? `1px solid ${theme.palette.primary.main}`
                               : "1px solid transparent",
                           "&:hover": {
                             backgroundColor:
                               currentSort === option.key
-                                ? "#e3f2fd"
-                                : "#f5f5f5",
+                                ? theme.palette.primary.light + "30"
+                                : theme.palette.action.hover,
                           },
                         }}
                       >
@@ -149,7 +149,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                             fontWeight: currentSort === option.key ? 600 : 400,
                             color:
                               currentSort === option.key
-                                ? "#2196f3"
+                                ? "primary.main"
                                 : "inherit",
                           }}
                         />
@@ -159,7 +159,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                               width: 8,
                               height: 8,
                               borderRadius: "50%",
-                              backgroundColor: "#2196f3",
+                              backgroundColor: theme.palette.primary.main,
                             }}
                           />
                         )}
@@ -176,7 +176,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
             <Box
               p={2}
               sx={{
-                borderTop: "1px solid #f0f0f0",
+                borderTop: `1px solid ${theme.palette.divider}`,
                 backgroundColor: "background.paper",
               }}
             >
@@ -231,7 +231,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
             right: 0,
             mt: 1,
             borderRadius: "8px",
-            border: "1px solid #e0e0e0",
+            border: `1px solid ${theme.palette.divider}`,
             zIndex: 1000,
           }}
         >
@@ -245,7 +245,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                       px: 2,
                       py: 1.5,
                       "&:hover": {
-                        backgroundColor: "#f5f5f5",
+                        backgroundColor: theme.palette.action.hover,
                       },
                     }}
                   >
@@ -254,7 +254,9 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                       primaryTypographyProps={{
                         fontWeight: currentSort === option.key ? 600 : 400,
                         color:
-                          currentSort === option.key ? "#2196f3" : "inherit",
+                          currentSort === option.key
+                            ? "primary.main"
+                            : "inherit",
                       }}
                     />
                     {currentSort === option.key && (
@@ -263,7 +265,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                           width: 8,
                           height: 8,
                           borderRadius: "50%",
-                          backgroundColor: "#2196f3",
+                          backgroundColor: "primary.main",
                         }}
                       />
                     )}

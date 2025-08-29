@@ -1,9 +1,9 @@
-import { Box, IconButton, useTheme, useMediaQuery } from '@mui/material';
-import  { useState, useEffect } from 'react';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import CircleIcon from '@mui/icons-material/Circle';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
+import { useState, useEffect } from "react";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import CircleIcon from "@mui/icons-material/Circle";
+import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 
 type ImageSliderProps = {
   images: {
@@ -14,20 +14,24 @@ type ImageSliderProps = {
   interval?: number;
 };
 
-export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageSliderProps) {
+export function ImageSlider({
+  images,
+  autoPlay = true,
+  interval = 3000,
+}: ImageSliderProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
   };
@@ -48,10 +52,10 @@ export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageS
       component="section"
       aria-label="Image Slider"
       sx={{
-        width: '100%',
-        height: isMobile ? '50vh' : '70vh',
-        position: 'relative',
-        overflow: 'hidden',
+        width: "100%",
+        height: isMobile ? "50vh" : "70vh",
+        position: "relative",
+        overflow: "hidden",
         boxShadow: 3,
       }}
       onMouseEnter={() => setIsHovered(true)}
@@ -60,9 +64,9 @@ export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageS
       {/* Slide Images */}
       <Box
         sx={{
-          display: 'flex',
-          height: '100%',
-          transition: 'transform 0.5s ease',
+          display: "flex",
+          height: "100%",
+          transition: "transform 0.5s ease",
           transform: `translateX(-${currentIndex * 100}%)`,
         }}
       >
@@ -70,8 +74,8 @@ export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageS
           <Box
             key={index}
             sx={{
-              minWidth: '100%',
-              height: '100%',
+              minWidth: "100%",
+              height: "100%",
             }}
           >
             <Box
@@ -79,9 +83,9 @@ export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageS
               src={image.url}
               alt={image.alt}
               sx={{
-                width: '100%',
-                height: '100%',
-                display: 'block',
+                width: "100%",
+                height: "100%",
+                display: "block",
               }}
             />
           </Box>
@@ -92,14 +96,23 @@ export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageS
       <IconButton
         onClick={goToPrevious}
         sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '16px',
-          transform: 'translateY(-50%)',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          position: "absolute",
+          top: "50%",
+          left: "16px",
+          transform: "translateY(-50%)",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? "rgba(255, 255, 255, 0.2)"
+              : "rgba(0, 0, 0, 0.5)",
+          color:
+            theme.palette.mode === "dark"
+              ? theme.palette.text.primary
+              : "white",
+          "&:hover": {
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.3)"
+                : "rgba(0, 0, 0, 0.7)",
           },
         }}
       >
@@ -109,54 +122,66 @@ export function ImageSlider({ images, autoPlay = true, interval = 3000 }: ImageS
       <IconButton
         onClick={goToNext}
         sx={{
-          position: 'absolute',
-          top: '50%',
-          right: '16px',
-          transform: 'translateY(-50%)',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          position: "absolute",
+          top: "50%",
+          right: "16px",
+          transform: "translateY(-50%)",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? "rgba(255, 255, 255, 0.2)"
+              : "rgba(0, 0, 0, 0.5)",
+          color:
+            theme.palette.mode === "dark"
+              ? theme.palette.text.primary
+              : "white",
+          "&:hover": {
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.3)"
+                : "rgba(0, 0, 0, 0.7)",
           },
         }}
       >
         <NavigateNextIcon />
       </IconButton>
 
-    {/* Pagination Dots */}
-    <Box
-    sx={{
-        position: 'absolute',
-        bottom: '16px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        gap: '8px',
-        backgroundColor: 'rgba(128, 128, 128, 0.5)', // Gray background with 50% opacity
-        borderRadius: '16px', // Rounded corners
-        padding: '4px 8px', // Some padding around the dots
-    }}
-    >
-    {images.map((_, index) => (
-        <IconButton
-        key={index}
-        size="small"
-        onClick={() => goToSlide(index)}
-        sx={{ 
-            p: 0,
-            '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.2)', // Light hover effect
-            }
+      {/* Pagination Dots */}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: "16px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: "8px",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? "rgba(255, 255, 255, 0.2)"
+              : "rgba(128, 128, 128, 0.5)",
+          borderRadius: "16px", // Rounded corners
+          padding: "4px 8px", // Some padding around the dots
         }}
-        >
-        {index === currentIndex ? (
-            <CircleIcon sx={{ color: 'white', fontSize: '12px' }} />
-        ) : (
-            <CircleOutlinedIcon sx={{ color: 'white', fontSize: '12px' }} />
-        )}
-        </IconButton>
-    ))}
-        </Box>
+      >
+        {images.map((_, index) => (
+          <IconButton
+            key={index}
+            size="small"
+            onClick={() => goToSlide(index)}
+            sx={{
+              p: 0,
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)", // Light hover effect
+              },
+            }}
+          >
+            {index === currentIndex ? (
+              <CircleIcon sx={{ color: "white", fontSize: "12px" }} />
+            ) : (
+              <CircleOutlinedIcon sx={{ color: "white", fontSize: "12px" }} />
+            )}
+          </IconButton>
+        ))}
+      </Box>
     </Box>
   );
 }

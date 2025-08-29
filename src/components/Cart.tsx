@@ -2,6 +2,8 @@ import { styled, useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../contexts/CartContext";
 
 const CartBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -10,15 +12,32 @@ const CartBadge = styled(Badge)`
   }
 `;
 
-export default function IconButtonWithBadge({ color }: { color?: string }) {
+export default function Cart() {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { getCartItemCount } = useCart();
+  const cartItemCount = getCartItemCount();
+
+  const handleCartClick = () => {
+    navigate("/cart-management");
+  };
+
   return (
-    <IconButton sx={{ marginRight: "10px" }}>
+    <IconButton
+      sx={{ marginRight: "10px" }}
+      onClick={handleCartClick}
+      aria-label="Shopping cart"
+    >
       <ShoppingCartIcon
         fontSize="small"
-        style={{ color: color || theme.palette.text.primary }}
+        style={{ color: theme.palette.text.primary }}
       />
-      <CartBadge badgeContent={2} color="primary" overlap="circular" />
+      <CartBadge
+        badgeContent={cartItemCount}
+        color="primary"
+        overlap="circular"
+        invisible={cartItemCount === 0}
+      />
     </IconButton>
   );
 }

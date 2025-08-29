@@ -31,11 +31,13 @@ const SearchBox: React.FC = () => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       const searchBox = searchRef.current;
-      
+
       // Check if click is outside the search box
       if (searchBox && !searchBox.contains(target)) {
         // Check if click is on the autocomplete dropdown
-        const autocompleteDropdown = document.querySelector('[data-autocomplete-dropdown]');
+        const autocompleteDropdown = document.querySelector(
+          "[data-autocomplete-dropdown]"
+        );
         if (!autocompleteDropdown || !autocompleteDropdown.contains(target)) {
           setShowAutocomplete(false);
         }
@@ -198,34 +200,36 @@ const SearchBox: React.FC = () => {
                 )
               )}
             </Box>
-            
+
             <Typography variant="h6" sx={{ mb: 2, color: "text.secondary" }}>
               Quick Categories
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              {["Smartphones", "Laptops", "Headphones", "Cameras"].map((category) => (
-                <Button
-                  key={category}
-                  variant="text"
-                  size="large"
-                  onClick={() => {
-                    setQuery(category);
-                    setShowAutocomplete(true);
-                  }}
-                  sx={{ 
-                    justifyContent: "flex-start",
-                    textTransform: "none",
-                    py: 1.5,
-                    px: 2,
-                    borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.04)",
-                    }
-                  }}
-                >
-                  {category}
-                </Button>
-              ))}
+              {["Smartphones", "Laptops", "Headphones", "Cameras"].map(
+                (category) => (
+                  <Button
+                    key={category}
+                    variant="text"
+                    size="large"
+                    onClick={() => {
+                      setQuery(category);
+                      setShowAutocomplete(true);
+                    }}
+                    sx={{
+                      justifyContent: "flex-start",
+                      textTransform: "none",
+                      py: 1.5,
+                      px: 2,
+                      borderRadius: 1,
+                      "&:hover": {
+                        backgroundColor: theme.palette.action.hover,
+                      },
+                    }}
+                  >
+                    {category}
+                  </Button>
+                )
+              )}
             </Box>
           </Box>
         )}
@@ -261,14 +265,14 @@ const SearchBox: React.FC = () => {
         </IconButton>
       </Paper>
 
-              {showAutocomplete && (
-          <SearchAutocomplete
-            query={query}
-            isOpen={showAutocomplete}
-            onSelect={handleSuggestionSelect}
-            anchorEl={searchRef.current}
-          />
-        )}
+      {showAutocomplete && (
+        <SearchAutocomplete
+          query={query}
+          isOpen={showAutocomplete}
+          onSelect={handleSuggestionSelect}
+          anchorEl={searchRef.current}
+        />
+      )}
     </Box>
   );
 
