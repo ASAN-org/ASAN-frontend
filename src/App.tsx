@@ -13,8 +13,9 @@ import { formatUrlSegment, normalizeCategoryName } from "./utils/urlUtils";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { getTheme } from "./utils/theme";
 import AboutUs from "./pages/AboutUsPage";
-import OrderList from "./pages/CartManagementPage";
+import CartManagementPage from "./pages/CartManagementPage";
 import Footer from "./components/Footer";
+import { CartProvider } from "./contexts/CartContext";
 
 const queryClient = new QueryClient();
 
@@ -109,24 +110,29 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        <Router>
-          <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
-            <Header />
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route
-                path="/about-us"
-                element={<AboutUs webshopData={webShopData} />}
-              />
-              <Route path="/cart-management" element={<OrderList />} />
-              <Route path="/product/:productId" element={<ProductDetail />} />
-              <Route path="/search" element={<SearchResults />} />
-              <Route path="/faq" element={<FAQ />} />
-              {dynamicRoutes}
-            </Routes>
-            <Footer webshopName={webShopData.title} />
-          </Box>
-        </Router>
+        <CartProvider>
+          <Router>
+            <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
+              <Header />
+              <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route
+                  path="/about-us"
+                  element={<AboutUs webshopData={webShopData} />}
+                />
+                <Route
+                  path="/cart-management"
+                  element={<CartManagementPage />}
+                />
+                <Route path="/product/:productId" element={<ProductDetail />} />
+                <Route path="/search" element={<SearchResults />} />
+                <Route path="/faq" element={<FAQ />} />
+                {dynamicRoutes}
+              </Routes>
+              <Footer webshopName={webShopData.title} />
+            </Box>
+          </Router>
+        </CartProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

@@ -411,6 +411,8 @@ const SearchResults: React.FC = () => {
                       display="flex"
                       alignItems="center"
                       justifyContent="space-between"
+                      flexDirection="column"
+                      gap={1}
                     >
                       <Typography
                         variant="h6"
@@ -420,19 +422,6 @@ const SearchResults: React.FC = () => {
                       >
                         Rp {product.price?.toLocaleString()}
                       </Typography>
-                      <Box
-                        sx={(theme) => ({
-                          backgroundColor: theme.palette.action.selected,
-                          color: theme.palette.primary.main,
-                          px: 1,
-                          py: 0.5,
-                          borderRadius: "4px",
-                          fontSize: "0.75rem",
-                          fontWeight: "500",
-                        })}
-                      >
-                        View
-                      </Box>
                     </Box>
                   </Box>
                 </Box>
