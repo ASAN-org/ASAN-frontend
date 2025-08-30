@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import { Card, CardContent, Typography, Box, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import type { Product } from "../types/Product";
 
@@ -9,6 +9,7 @@ type ProductCardProps = {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
@@ -18,7 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <Card
       onClick={handleCardClick}
       sx={(theme) => ({
-        height: 240,
+        height: 240, // Reduced height since we removed the button
         width: 180,
         background: theme.palette.background.paper,
         color: theme.palette.text.primary,
@@ -28,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         overflow: "hidden",
         position: "relative",
         transition: "all 0.3s ease",
-        mt: 1, // Top margin
+        mt: 1,
         mb: 1,
         cursor: "pointer",
         boxShadow: theme.shadows[1],
@@ -57,7 +58,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             objectFit: "contain",
           }}
         />
+        {/* Discount Badge */}
+        {product.discount && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              backgroundColor: theme.palette.error.main,
+              color: "white",
+              borderRadius: "12px",
+              px: 1,
+              py: 0.5,
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+            }}
+          >
+            -{product.discount}%
+          </Box>
+        )}
       </Box>
+
       {/* Info Section */}
       <CardContent
         sx={{
@@ -96,15 +117,46 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.brand}
           </Typography>
         </Box>
-        <Typography
-          sx={{
-            fontFamily: "'Anjoman-FaNum-Bold'",
-            fontSize: "1rem",
-            mt: 1,
-          }}
-        >
-          Rp {product.price}
-        </Typography>
+
+        {/* Price Section */}
+        <Box sx={{ mt: 1 }}>
+          {product.discount ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+              <Typography
+                sx={{
+                  fontFamily: "'Anjoman-FaNum-Bold'",
+                  fontSize: "1rem",
+                  color: "error.main",
+                }}
+              >
+                Rp{" "}
+                {Math.round(
+                  (product.price || 0) * (1 - product.discount / 100)
+                )}
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "'Anjoman-FaNum-Medium'",
+                  fontSize: "0.8rem",
+                  textDecoration: "line-through",
+                  color: "text.secondary",
+                }}
+              >
+                Rp {product.price}
+              </Typography>
+            </Box>
+          ) : (
+            <Typography
+              sx={{
+                fontFamily: "'Anjoman-FaNum-Bold'",
+                fontSize: "1rem",
+                mb: 1,
+              }}
+            >
+              Rp {product.price}
+            </Typography>
+          )}
+        </Box>
       </CardContent>
     </Card>
   );

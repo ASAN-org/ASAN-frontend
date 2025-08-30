@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
 
 interface LoadingSpinnerProps {
   message?: string;
@@ -12,6 +12,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = "medium",
   fullScreen = false,
 }) => {
+  const theme = useTheme();
   const getSize = () => {
     switch (size) {
       case "small":
@@ -37,7 +38,10 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? "rgba(0, 0, 0, 0.9)"
+              : "rgba(255, 255, 255, 0.9)",
           zIndex: 9999,
         }),
       }}

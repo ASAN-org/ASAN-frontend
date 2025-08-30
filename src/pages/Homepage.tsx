@@ -34,7 +34,14 @@ function Homepage() {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
         <LoadingSpinner message="Loading homepage..." />
       </Box>
     );
@@ -43,9 +50,15 @@ function Homepage() {
   return (
     <Box sx={{ overflow: "hidden" }}>
       <Box>
-          <ImageSlider images={IMAGES}/>
+        <ImageSlider images={IMAGES} />
       </Box>
-      <Box sx={{mt: 9, overflow: "hidden"}}>
+      <Box
+        sx={{
+          mt: { xs: 4, md: 6 },
+          mb: { xs: 4, md: 6 },
+          overflow: "hidden",
+        }}
+      >
         <ProductSlider products={top12Products} />
         <ProductSlider products={secodn12Products} />
         <MiniImageSlider images={IMAGES} />

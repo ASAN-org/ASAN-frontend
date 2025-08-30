@@ -17,6 +17,8 @@ import {
   Link,
   useMediaQuery,
   useTheme,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { mockProducts } from "../types/mockProducts";
@@ -24,6 +26,8 @@ import { formatUrlSegment, normalizeCategoryName } from "../utils/urlUtils";
 import ProductSlider from "../components/ProductSlider";
 import LoadingSpinner from "../components/LoadingSpinner";
 import type { Product } from "../types/Product";
+import { useCart } from "../contexts/CartContext";
+import { AddShoppingCart, ShoppingCart } from "@mui/icons-material";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,8 +56,10 @@ const ProductDetail: React.FC = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [tabValue, setTabValue] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showCartSnackbar, setShowCartSnackbar] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { addToCart, isInCart } = useCart();
 
   // Simulate loading time for product data
   useEffect(() => {
@@ -95,6 +101,11 @@ const ProductDetail: React.FC = () => {
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product, 1);
+    setShowCartSnackbar(true);
   };
 
   const discountedPrice = product.discount
@@ -316,7 +327,7 @@ const ProductDetail: React.FC = () => {
                       cursor: "pointer",
                       border:
                         selectedImageIndex === index
-                          ? "2px solid #1976d2"
+                          ? "2px solid primary.main"
                           : "2px solid transparent",
                       borderRadius: "4px",
                       overflow: "hidden",
@@ -357,7 +368,10 @@ const ProductDetail: React.FC = () => {
             {product.rating && (
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Rating value={product.rating} precision={0.1} readOnly />
-                <Typography variant="body2" sx={{ ml: 1, color: "#64748b" }}>
+                <Typography
+                  variant="body2"
+                  sx={{ ml: 1, color: "text.secondary" }}
+                >
                   ({product.reviewCount} reviews)
                 </Typography>
               </Box>
@@ -369,7 +383,7 @@ const ProductDetail: React.FC = () => {
                 variant={isMobile ? "h4" : "h3"}
                 sx={{
                   fontFamily: "'Anjoman-FaNum-Bold'",
-                  color: "#dc2626",
+                  color: "error.main",
                   display: "flex",
                   alignItems: "center",
                   gap: isMobile ? 1 : 2,
@@ -382,7 +396,7 @@ const ProductDetail: React.FC = () => {
                     variant={isMobile ? "h6" : "h5"}
                     sx={{
                       textDecoration: "line-through",
-                      color: "#64748b",
+                      color: "text.secondary",
                       fontFamily: "'Anjoman-FaNum-Medium'",
                     }}
                   >
@@ -406,7 +420,9 @@ const ProductDetail: React.FC = () => {
                 variant="body1"
                 sx={{
                   color:
-                    product.stock && product.stock > 0 ? "#059669" : "#dc2626",
+                    product.stock && product.stock > 0
+                      ? "success.main"
+                      : "error.main",
                   fontFamily: "'Anjoman-FaNum-Medium'",
                 }}
               >
@@ -442,15 +458,28 @@ const ProductDetail: React.FC = () => {
               }}
             >
               <Button
-                variant="contained"
+                variant={isInCart(product.id) ? "outlined" : "contained"}
                 size={isMobile ? "medium" : "large"}
                 disabled={!product.stock || product.stock <= 0}
+                onClick={handleAddToCart}
+                startIcon={
+                  isInCart(product.id) ? <ShoppingCart /> : <AddShoppingCart />
+                }
                 sx={{
                   fontFamily: "'Anjoman-FaNum-Bold'",
                   px: isMobile ? 2 : 4,
+                  ...(isInCart(product.id) && {
+                    color: "success.main",
+                    borderColor: "success.main",
+                    "&:hover": {
+                      borderColor: "success.dark",
+                      backgroundColor: "success.light",
+                      color: "success.dark",
+                    },
+                  }),
                 }}
               >
-                Add to Cart
+                {isInCart(product.id) ? "In Cart" : "Add to Cart"}
               </Button>
               <Button
                 variant="outlined"
@@ -467,7 +496,10 @@ const ProductDetail: React.FC = () => {
             {/* Tags */}
             {product.tags && product.tags.length > 0 && (
               <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ mb: 1, color: "#64748b" }}>
+                <Typography
+                  variant="body2"
+                  sx={{ mb: 1, color: "text.secondary" }}
+                >
                   Tags:
                 </Typography>
                 <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
@@ -543,7 +575,10 @@ const ProductDetail: React.FC = () => {
                           >
                             {key}
                           </Typography>
-                          <Typography variant="body1" sx={{ color: "#64748b" }}>
+                          <Typography
+                            variant="body1"
+                            sx={{ color: "text.secondary" }}
+                          >
                             {value}
                           </Typography>
                         </Box>
@@ -576,7 +611,7 @@ const ProductDetail: React.FC = () => {
                               width: 8,
                               height: 8,
                               borderRadius: "50%",
-                              backgroundColor: "#1976d2",
+                              backgroundColor: "primary.main",
                               mr: 2,
                             }}
                           />
@@ -602,6 +637,22 @@ const ProductDetail: React.FC = () => {
           />
         </Box>
       )}
+
+      {/* Cart Notification Snackbar */}
+      <Snackbar
+        open={showCartSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setShowCartSnackbar(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setShowCartSnackbar(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Product added to cart successfully!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

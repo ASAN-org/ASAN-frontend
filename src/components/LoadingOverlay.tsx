@@ -1,5 +1,11 @@
 import React from "react";
-import { Box, Backdrop, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Backdrop,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
 interface LoadingOverlayProps {
   open: boolean;
@@ -12,6 +18,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   message = "Loading...",
   size = "medium",
 }) => {
+  const theme = useTheme();
   const getSize = () => {
     switch (size) {
       case "small":
@@ -26,9 +33,13 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
   return (
     <Backdrop
       sx={{
-        color: "#fff",
+        color:
+          theme.palette.mode === "dark" ? theme.palette.text.primary : "#fff",
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? "rgba(0, 0, 0, 0.8)"
+            : "rgba(0, 0, 0, 0.5)",
       }}
       open={open}
     >
@@ -46,7 +57,10 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: "white",
+              color:
+                theme.palette.mode === "dark"
+                  ? theme.palette.text.primary
+                  : "white",
               fontFamily: "'Anjoman-FaNum-Medium'",
               textAlign: "center",
             }}
