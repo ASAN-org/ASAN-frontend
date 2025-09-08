@@ -20,21 +20,27 @@ import { CartProvider } from "./contexts/CartContext";
 const queryClient = new QueryClient();
 
 interface WebShopData {
+  about_us: {
+    content: string;
+    title: string;
+  };
   categories: Array<{
     name: string;
     children: string[];
   }>;
-  title: string;
-  products_page: {
-    default_sort_option: string;
-    items_per_row: number;
-    sort_options: Array<{
-      key: string;
-      label: string;
-      order: number;
-    }>;
-  };
-  theme: "dark" | "light";
+  faq: Array<{
+    question: string;
+    answer: string;
+    order: number;
+  }>;
+  filters: Array<{
+    category: string;
+    label: string;
+    max?: number;
+    min?: number;
+    type: string;
+    unit?: string;
+  }>;
   footer: {
     faq_enabled: boolean;
     shop_info: {
@@ -49,15 +55,23 @@ interface WebShopData {
       telegram: string;
     };
   };
-  about_us: {
-    content: string;
-    title: string;
+  logo: string;
+  products_page: {
+    default_sort_option: string;
+    items_per_row: number;
+    sort_options: Array<{
+      key: string;
+      label: string;
+      order: number;
+    }>;
   };
-  faq: Array<{
-    question: string;
-    answer: string;
-    order: number;
-  }>;
+  reviews_status: boolean;
+  similar_products: {
+    enabled: boolean;
+    max_items: number;
+  };
+  theme: "dark" | "light";
+  title: string;
 }
 
 function App() {
@@ -147,7 +161,10 @@ function App() {
                   path="/cart-management"
                   element={<CartManagementPage />}
                 />
-                <Route path="/product/:productId" element={<ProductDetail />} />
+                <Route
+                  path="/product/:productId"
+                  element={<ProductDetail webshopData={webShopData!} />}
+                />
                 <Route path="/search" element={<SearchResults />} />
                 <Route path="/faq" element={<FAQ />} />
                 {dynamicRoutes}

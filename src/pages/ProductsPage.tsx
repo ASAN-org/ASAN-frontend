@@ -38,6 +38,9 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
     [key: string]: number[] | string[] | boolean;
   }>({});
 
+  // Sort options by their order field from backend
+  const sortedSortOptions = [...sortOptions].sort((a, b) => a.order - b.order);
+
   // Find related products for the current category/subCategory
   const allRelatedProducts = mockProducts.filter(
     (p) =>
@@ -167,7 +170,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
           return bScore - aScore;
         });
     }
-  }, [allRelatedProducts, currentSort]);
+  }, [filteredProducts, currentSort]);
 
   // Calculate pagination
   const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
@@ -221,7 +224,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
         <Filter
           category={category}
           subCategory={subCategory}
-          sortOptions={sortOptions}
+          sortOptions={sortedSortOptions}
           currentSort={currentSort}
           onSortChange={handleSortChange}
           onApplyFilters={handleApplyFilters}
@@ -244,7 +247,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({
             </Typography>
 
             <SortDropdown
-              sortOptions={sortOptions}
+              sortOptions={sortedSortOptions}
               currentSort={currentSort}
               onSortChange={handleSortChange}
               isLoading={isLoading}
