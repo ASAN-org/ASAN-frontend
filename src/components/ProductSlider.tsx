@@ -16,12 +16,14 @@ type ProductSliderProps = {
   products: Product[];
   title?: string;
   showViewAll?: boolean;
+  onViewAllClick?: () => void;
 };
 
 const ProductSlider: React.FC<ProductSliderProps> = ({
   products,
   title = "Bestsellers",
   showViewAll = true,
+  onViewAllClick,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -42,7 +44,13 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   const goToPrevious = () =>
     !isFirstSlide && setCurrentIndex((prev) => prev - 1);
   const goToNext = () => !isLastSlide && setCurrentIndex((prev) => prev + 1);
-  const handleViewAll = () => console.log("View All clicked");
+  const handleViewAll = () => {
+    if (onViewAllClick) {
+      onViewAllClick();
+    } else {
+      console.log("View All clicked");
+    }
+  };
 
   return (
     <Box

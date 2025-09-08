@@ -19,6 +19,8 @@ import {
   useTheme,
   Snackbar,
   Alert,
+  Divider,
+  Avatar,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { mockProducts } from "../types/mockProducts";
@@ -33,6 +35,18 @@ interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+}
+
+interface WebShopData {
+  similar_products: {
+    enabled: boolean;
+    max_items: number;
+  };
+  reviews_status: boolean;
+}
+
+interface ProductDetailProps {
+  webshopData: WebShopData;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -51,7 +65,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const ProductDetail: React.FC = () => {
+const ProductDetail: React.FC<ProductDetailProps> = ({ webshopData }) => {
   const { productId } = useParams<{ productId: string }>();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [tabValue, setTabValue] = useState(0);
@@ -196,13 +210,62 @@ const ProductDetail: React.FC = () => {
       })
       .filter((p) => p._score > 10) // Only include products with meaningful relation
       .sort((a, b) => (b._score || 0) - (a._score || 0)) // Sort by score
-      .slice(0, 12) // Limit to 12 products
+      .slice(0, webshopData.similar_products.max_items) // Limit based on backend setting
       .map(({ _score, ...p }) => p); // Remove score from final result
 
     return relatedProducts;
   };
 
   const relatedProducts = getRelatedProducts(product);
+
+  // Mock comments data
+  const mockComments = [
+    {
+      id: 1,
+      author: "Ahmad Rezaei",
+      rating: 5,
+      date: "2024-01-15",
+      comment:
+        "Excellent product! The quality is outstanding and it arrived exactly as described. Highly recommended!",
+      verified: true,
+    },
+    {
+      id: 2,
+      author: "Sara Mohammadi",
+      rating: 4,
+      date: "2024-01-10",
+      comment:
+        "Good product overall. Fast shipping and good packaging. The only minor issue is the color is slightly different from the photos, but still acceptable.",
+      verified: true,
+    },
+    {
+      id: 3,
+      author: "Mohammad Karimi",
+      rating: 5,
+      date: "2024-01-08",
+      comment:
+        "Perfect! Exactly what I was looking for. The build quality is excellent and it works flawlessly. Will definitely buy from this store again.",
+      verified: false,
+    },
+    {
+      id: 4,
+      author: "Fatemeh Ahmadi",
+      rating: 3,
+      date: "2024-01-05",
+      comment:
+        "The product is okay, but I expected better quality for the price. It works but feels a bit cheap. Customer service was helpful though.",
+      verified: true,
+    },
+    {
+      id: 5,
+      author: "Ali Hassanpour",
+      rating: 5,
+      date: "2024-01-03",
+      comment:
+        "Amazing product! Exceeded my expectations. The design is beautiful and the functionality is perfect. Great value for money!",
+      verified: true,
+    },
+  ];
 
   return (
     <Container
@@ -628,13 +691,122 @@ const ProductDetail: React.FC = () => {
       </Box>
 
       {/* Related Products Section */}
-      {relatedProducts.length > 0 && (
+      {webshopData.similar_products.enabled && relatedProducts.length > 0 && (
         <Box sx={{ mt: isMobile ? 4 : 6 }}>
           <ProductSlider
             products={relatedProducts}
             title="Related Products"
             showViewAll={false}
           />
+        </Box>
+      )}
+
+      {/* Reviews/Comments Section */}
+      {webshopData.reviews_status && (
+        <Box sx={{ mt: isMobile ? 4 : 6 }}>
+          <Paper elevation={1} sx={{ p: 3 }}>
+            <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold" }}>
+              Customer Reviews
+            </Typography>
+
+            {/* Overall Rating Summary */}
+            <Box
+              sx={{
+                mb: 4,
+                p: 2,
+                backgroundColor: "background.default",
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography variant="h4" sx={{ mr: 2, fontWeight: "bold" }}>
+                  {product.rating?.toFixed(1) || "4.2"}
+                </Typography>
+                <Box>
+                  <Rating
+                    value={product.rating || 4.2}
+                    precision={0.1}
+                    readOnly
+                    size="large"
+                  />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mt: 0.5 }}
+                  >
+                    Based on {product.reviewCount || 24} reviews
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Comments List */}
+            <Box>
+              {mockComments.map((comment, index) => (
+                <Box key={comment.id}>
+                  <Box sx={{ mb: 3 }}>
+                    <Box
+                      sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
+                    >
+                      <Avatar sx={{ mr: 2, bgcolor: "primary.main" }}>
+                        {comment.author.charAt(0)}
+                      </Avatar>
+                      <Box sx={{ flex: 1 }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ fontWeight: "bold", mr: 1 }}
+                          >
+                            {comment.author}
+                          </Typography>
+                          {comment.verified && (
+                            <Chip
+                              label="Verified Purchase"
+                              size="small"
+                              color="success"
+                              variant="outlined"
+                              sx={{ fontSize: "0.7rem", height: 20 }}
+                            />
+                          )}
+                        </Box>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                        >
+                          <Rating
+                            value={comment.rating}
+                            size="small"
+                            readOnly
+                          />
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ ml: 1 }}
+                          >
+                            {new Date(comment.date).toLocaleDateString()}
+                          </Typography>
+                        </Box>
+                        <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+                          {comment.comment}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                  {index < mockComments.length - 1 && (
+                    <Divider sx={{ mb: 2 }} />
+                  )}
+                </Box>
+              ))}
+            </Box>
+
+            {/* Load More Button */}
+            <Box sx={{ textAlign: "center", mt: 3 }}>
+              <Button variant="outlined" size="large">
+                Load More Reviews
+              </Button>
+            </Box>
+          </Paper>
         </Box>
       )}
 

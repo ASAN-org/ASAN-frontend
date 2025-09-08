@@ -1,5 +1,6 @@
 import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -9,6 +10,7 @@ type ImageSliderProps = {
   images: {
     url: string;
     alt: string;
+    link?: string;
   }[];
   autoPlay?: boolean;
   interval?: number;
@@ -21,6 +23,7 @@ export function ImageSlider({
 }: ImageSliderProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -38,6 +41,23 @@ export function ImageSlider({
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
+  };
+
+  const handleImageClick = (image: {
+    url: string;
+    alt: string;
+    link?: string;
+  }) => {
+    if (image.link) {
+      // Parse the link to handle different formats
+      if (image.link.startsWith("/")) {
+        navigate(image.link);
+      } else if (image.link.startsWith("http")) {
+        window.open(image.link, "_blank");
+      } else {
+        navigate(image.link);
+      }
+    }
   };
 
   useEffect(() => {
@@ -82,10 +102,18 @@ export function ImageSlider({
               component="img"
               src={image.url}
               alt={image.alt}
+              onClick={() => handleImageClick(image)}
               sx={{
                 width: "100%",
                 height: "100%",
                 display: "block",
+                cursor: image.link ? "pointer" : "default",
+                transition: "transform 0.2s ease",
+                "&:hover": image.link
+                  ? {
+                      transform: "scale(1.02)",
+                    }
+                  : {},
               }}
             />
           </Box>

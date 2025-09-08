@@ -10,6 +10,7 @@ import { mockProducts } from "../types/mockProducts";
 import ProductSlider from "../components/ProductSlider";
 import { MiniImageSlider } from "../components/MiniSlider";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const IMAGES = [
   { url: p1, alt: "Pic One" },
@@ -18,11 +19,31 @@ const IMAGES = [
   { url: p4, alt: "Pic Four" },
   { url: p5, alt: "Pic Five" },
 ];
-const top12Products = mockProducts.slice(0, 12);
-const secodn12Products = mockProducts.slice(12, 24);
 
-function Homepage() {
+interface WebShopData {
+  slider: Array<{
+    image: string;
+    link: string;
+    order: number;
+  }>;
+  "home-page_lists": Array<{
+    enabled: boolean;
+    listName: string;
+    order: number;
+  }>;
+  categories: Array<{
+    name: string;
+    children: string[];
+  }>;
+}
+
+interface HomepageProps {
+  webshopData: WebShopData;
+}
+
+const Homepage: React.FC<HomepageProps> = ({ webshopData }) => {
   const [isLoading, setIsLoading] = React.useState(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     // Simulate loading time for homepage data
@@ -31,6 +52,71 @@ function Homepage() {
     }, 800);
     return () => clearTimeout(timer);
   }, []);
+
+  // Function to get products based on list name
+  const getProductsForList = (listName: string) => {
+    switch (listName) {
+      case "latest_products":
+        return mockProducts
+          .sort(
+            (a, b) =>
+              parseInt(a.id.split("-")[1]) - parseInt(b.id.split("-")[1])
+          )
+          .slice(0, 12);
+      case "popular_products":
+        return mockProducts
+          .sort((a, b) => {
+            const aScore = (a.discount || 0) * 10 + (a.price || 0);
+            const bScore = (b.discount || 0) * 10 + (b.price || 0);
+            return bScore - aScore;
+          })
+          .slice(0, 12);
+      case "best_selling_products":
+        return mockProducts
+          .filter((p) => p.rating && p.rating >= 4.5)
+          .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+          .slice(0, 12);
+      default:
+        return mockProducts.slice(0, 12);
+    }
+  };
+
+  // Function to get title for list name
+  const getListTitle = (listName: string) => {
+    switch (listName) {
+      case "latest_products":
+        return "Latest Products";
+      case "popular_products":
+        return "Popular Products";
+      case "best_selling_products":
+        return "Best Selling Products";
+      default:
+        return "Products";
+    }
+  };
+
+  // Convert backend slider data to ImageSlider format
+  const getSliderImages = () => {
+    return webshopData.slider
+      .sort((a, b) => a.order - b.order)
+      .map((slider) => ({
+        url: slider.image,
+        alt: `Slider ${slider.order}`,
+        link: slider.link,
+      }));
+  };
+
+  // Handle View All button clicks - navigate to random product page
+  const handleViewAllClick = () => {
+    // Get a random category from the backend data
+    const randomCategory =
+      webshopData.categories[
+        Math.floor(Math.random() * webshopData.categories.length)
+      ];
+
+    // Navigate to the random category page
+    navigate(`/${randomCategory.name.toLowerCase()}`);
+  };
 
   if (isLoading) {
     return (
@@ -49,9 +135,12 @@ function Homepage() {
 
   return (
     <Box sx={{ overflow: "hidden" }}>
+      {/* Main Slider */}
       <Box>
-        <ImageSlider images={IMAGES} />
+        <ImageSlider images={getSliderImages()} />
       </Box>
+
+      {/* Product Lists */}
       <Box
         sx={{
           mt: { xs: 4, md: 6 },
@@ -59,14 +148,29 @@ function Homepage() {
           overflow: "hidden",
         }}
       >
-        <ProductSlider products={top12Products} />
-        <ProductSlider products={secodn12Products} />
-        <MiniImageSlider images={IMAGES} />
-        <ProductSlider products={top12Products} />
-        <ProductSlider products={secodn12Products} />
+        {/* Render enabled product lists from backend */}
+        {webshopData["home-page_lists"]
+          .filter((list) => list.enabled)
+          .sort((a, b) => a.order - b.order)
+          .map((list, index) => (
+            <React.Fragment key={list.listName}>
+              <ProductSlider
+                products={getProductsForList(list.listName)}
+                title={getListTitle(list.listName)}
+                showViewAll={true}
+                onViewAllClick={handleViewAllClick}
+              />
+              {/* Add second slider between second and third lists */}
+              {index === 1 && (
+                <Box sx={{ mt: { xs: 4, md: 6 }, mb: { xs: 4, md: 6 } }}>
+                  <MiniImageSlider images={IMAGES} />
+                </Box>
+              )}
+            </React.Fragment>
+          ))}
       </Box>
     </Box>
   );
-}
+};
 
 export default Homepage;
