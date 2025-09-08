@@ -55,6 +55,11 @@ interface WebShopData {
       telegram: string;
     };
   };
+  "home-page_lists": Array<{
+    enabled: boolean;
+    listName: string;
+    order: number;
+  }>;
   logo: string;
   products_page: {
     default_sort_option: string;
@@ -70,6 +75,11 @@ interface WebShopData {
     enabled: boolean;
     max_items: number;
   };
+  slider: Array<{
+    image: string;
+    link: string;
+    order: number;
+  }>;
   theme: "dark" | "light";
   title: string;
 }
@@ -152,7 +162,10 @@ function App() {
             <Box sx={{ overflowX: "hidden", minHeight: "100vh" }}>
               <Header />
               <Routes>
-                <Route path="/" element={<Homepage />} />
+                <Route
+                  path="/"
+                  element={<Homepage webshopData={webShopData!} />}
+                />
                 <Route
                   path="/about-us"
                   element={<AboutUs webshopData={webShopData} />}
